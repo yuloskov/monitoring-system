@@ -1,6 +1,13 @@
 from flask import Flask
+import psycopg2
 
 import logging.config
+
+try:
+    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password='postgres'")
+except: 
+    print("Oopsie... I can not connect to database")    
+cur = conn.cursor()
 
 LOGGER_CONFIG = {
     'version': 1,
