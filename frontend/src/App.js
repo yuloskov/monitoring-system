@@ -1,24 +1,26 @@
 import React from 'react';
 import './App.css';
-import Button from 'react-bootstrap/Button';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 import Map from './components/Map';
+import MyNavbar from './components/Navbar';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
         <div>
+          <MyNavbar/>
           <Map>
             
           </Map>
         </div>
-      </header>
 
       <Router>
       <div>
