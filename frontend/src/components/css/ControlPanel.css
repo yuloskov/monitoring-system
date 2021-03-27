@@ -1,0 +1,9 @@
+body, html {
+    height: 100%;
+}
+
+.panel {
+    background-color: aliceblue;
+    box-shadow: 8px 0 10px -1px rgba(0, 0, 0, 0.2);
+    height: 100vh;
+}
