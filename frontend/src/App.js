@@ -7,15 +7,16 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import Map from './components/Map';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <div>
-          <Button>
-            heh
-          </Button>
+          <Map>
+            
+          </Map>
         </div>
       </header>
 
