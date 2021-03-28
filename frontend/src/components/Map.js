@@ -33,8 +33,8 @@ export default function() {
 
   useEffect(() => {
     async function foo() {
-      const res = await fetch('http://localhost:5000/zhopa')
-      const data = (await res.json()).slice(0, 3000)
+      const res = await fetch('http://localhost:5000/api/map/metrics/buff')
+      const data = await res.json()
       const avg = data.map(x => x[0] * x[3]).reduce((x, y) => x + y, 0) / data.reduce((acc, p) => acc + p[3], 0)
       const transform = x => {
         const v = 50 + 50 * (avg - x) / avg
