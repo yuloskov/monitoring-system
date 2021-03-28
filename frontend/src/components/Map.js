@@ -98,7 +98,7 @@ export default function({ start, end }) {
         </ymaps>`
       )
 
-      var clusterer = new ymaps.Clusterer({
+      const clusterer = new ymaps.Clusterer({
         clusterIconLayout: ClusterIconLayout,
         clusterIconShape: {
           type: 'Circle',
@@ -110,13 +110,19 @@ export default function({ start, end }) {
       map.geoObjects.removeAll();
       clusterer.add(points.map(p => new ymaps.Placemark(p[0], {color: p[1], count: p[2]})))
       map.geoObjects.add(clusterer);
+      const zoomControl = new ymaps.control.ZoomControl({
+        options: {
+            size: "small"
+        }
+      });
+      map.controls.add(zoomControl);
 
       return ''
     }
   }, [points, map])
 
   const ConnectedColorClusterer = React.useMemo(() => {
-    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer'])
+    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl'])
   }, [ColorClusterer])
 
   if (!points)
@@ -135,6 +141,10 @@ export default function({ start, end }) {
           defaultState={{
             center: [50, 50],
             zoom: 4,
+          }}
+          options={{
+            maxZoom: 10,
+            minZoom: 4
           }}
           instanceRef={(map) => setMap(map)}
         >
