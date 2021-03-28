@@ -136,8 +136,6 @@ export default function({ start, end }) {
             center: [50, 50],
             zoom: 4,
           }}
-          width={mapContainer.width}
-          height={mapContainer.height}
           instanceRef={(map) => setMap(map)}
         >
           <ConnectedColorClusterer></ConnectedColorClusterer>

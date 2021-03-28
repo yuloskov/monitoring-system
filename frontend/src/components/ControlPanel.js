@@ -15,15 +15,15 @@ function ControlPanel({ start, end, setEnd }) {
   return (
     <>
       <div className="panel">
-        <Container>
+        <Container bg='primary'>
           <Row style={{padding: '10px'}}>
             <Link to="/map" style={{width: '100%'}}>
-              <Button block>Map</Button>
+              <Button block variant='secondary'>Map</Button>
             </Link>
           </Row>
           <Row style={{padding: '10px'}}>
             <Link to="/user_board" style={{width: '100%'}}>
-              <Button block>User Board</Button>
+              <Button block variant='secondary'>User Board</Button>
             </Link>
           </Row>
 
