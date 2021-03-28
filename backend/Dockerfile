@@ -1,8 +1,6 @@
-FROM python:3.7-alpine
+FROM python:3.7
 
 WORKDIR /application
-
-RUN apk add --no-cache make gcc musl-dev libffi-dev openssl-dev
 
 COPY ./requirements.txt .
 

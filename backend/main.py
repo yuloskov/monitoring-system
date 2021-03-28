@@ -1,10 +1,11 @@
 from flask import Flask
 import psycopg2
+import os
 
 import logging.config
 
 try:
-    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password='postgres'")
+    conn = psycopg2.connect(f"dbname='{os.environ['POSTGRES_DB']}' user='{os.environ['POSTGRES_USER']}' host='{os.environ['DATABASE_URL']}' password='{os.environ['POSTGRES_PASSWORD']}'")
 except: 
     print("Oopsie... I can not connect to database")    
 cur = conn.cursor()
@@ -43,6 +44,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
+    cur.execute("SELECT * FROM users LIMIT 10;")
+    logger.info(cur.fetchone())
     return 'Hello'
 
 
