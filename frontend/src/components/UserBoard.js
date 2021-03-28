@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import BarChart from './BarChart';
 import ScatterPlot from './ScatterPlot';
+import UserData from './UserData';
 
 function UserBoard() {
   return (
@@ -18,7 +19,14 @@ function UserBoard() {
         </Form>
       </div>
 
-      <Container fluid style={{ paddingLeft: 0, paddingRight: 10}}>
+      <Container fluid style={{paddingLeft: 0, paddingRight: 10}}>
+        <Row className="mt-3">
+          <Col md={6} className="mb-3">
+            <Card>
+              <UserData/>
+            </Card>
+          </Col>
+        </Row>
         <Row className="mt-3">
           <Col className="mb-3">
             <Card>
