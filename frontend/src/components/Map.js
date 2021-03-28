@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withYMaps, YMaps, Map, Clusterer, Placemark, Circle, ObjectManager } from 'react-yandex-maps';
 
 const mapContainer = {
@@ -33,6 +33,26 @@ const geoAvgColor = function (data, properties, filterValue) {
 }
 
 export default function() {
+  const [points, setPoints] = useState(null)
+
+  useEffect(() => {
+    async function foo() {
+      const res = await fetch('http://localhost:5000/zhopa')
+      const data = (await res.json()).slice(0, 1000)
+      const avg = data.map(x => x[0]).reduce((x, y) => x + y, 0) / 1000
+      const transform = x => {
+        const v = 50 + 50 * (avg - x) / avg
+        if (v < 0) return 0
+        if (v > 100) return 100
+        return v
+      }
+
+      setPoints(data.map(([met, lon, lat]) => new Point([lat, lon], transform(met))))
+    }
+    foo()
+
+  }, [])
+
   const ColorClusterer = React.useMemo(() => {
     return ({ ymaps }) => {
       ymaps.template.filtersStorage.add('count', geoCounter)
@@ -91,18 +111,20 @@ export default function() {
         </Clusterer>
       )
     }
-  }, [])
+  }, [points])
 
   const ConnectedColorClusterer = React.useMemo(() => {
     return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage'])
   }, [ColorClusterer])
 
+  if (!points)
+    return <h1>ZHOPA</h1>
   return (
     <div style={mapContainer}>
       <YMaps>
         <Map
           defaultState={{
-            center: points[0].coordinates,
+            center: [50, 50],
             zoom: 4,
           }}
           width={900}

@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS
 import psycopg2
 import os
 
@@ -40,6 +41,7 @@ logger = logging.getLogger(__name__)
 logging.config.dictConfig(LOGGER_CONFIG)
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
@@ -48,6 +50,11 @@ def hello_world():
     logger.info(cur.fetchone())
     return 'Hello'
 
+
+@app.route('/zhopa')
+def zhopa():
+    cur.execute("select a.action_attributes_str as buff_time, b.longitude, b.latitude from buffering_stop a, unique_ips b where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= '2021-03-14 18:00:00' and server_time < '2021-03-14 20:00:00'")
+    return jsonify(cur.fetchall())
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
