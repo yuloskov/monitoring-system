@@ -24,11 +24,11 @@ function App() {
         <MyNavbar/>
         <Container fluid style={{paddingLeft: 0, paddingRight: 0}}>
           <Row>
-            <Col xs={2}>
+            <Col xs={2} style={{paddingRight: 0}}>
               <ControlPanel/>
             </Col>
 
-            <Col>
+            <Col style={{paddingLeft: 0}}>
               <Route path="/map">
                 <Map/>
               </Route>

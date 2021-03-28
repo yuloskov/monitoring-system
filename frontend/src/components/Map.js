@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { withYMaps, YMaps, Map, } from 'react-yandex-maps';
-
-const mapContainer = {
-  width: 1000,
-  height: 1000
-}
+import Spinner from 'react-bootstrap/Spinner';
 
 const geoCounter = function (data, properties, filterValue) {
   return properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
@@ -110,17 +106,22 @@ export default function() {
   }, [ColorClusterer])
 
   if (!points)
-    return <h1>ZHOPA</h1>
+    return (
+      <div className="mt-5 mb-5">
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
+    );
   return (
-    <div style={mapContainer}>
+    <div>
       <YMaps>
         <Map
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           defaultState={{
             center: [50, 50],
             zoom: 4,
           }}
-          width={900}
-          height={900}
           instanceRef={(map) => setMap(map)}
         >
           <ConnectedColorClusterer></ConnectedColorClusterer>
