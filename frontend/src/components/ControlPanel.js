@@ -27,7 +27,7 @@ function ControlPanel({ start, end, setEnd }) {
             </Link>
           </Row>
 
-          <hr/>
+          <hr style={{background: '#e00a1e'}}/>
 
           <Row style={{padding: '10px'}}>
             From

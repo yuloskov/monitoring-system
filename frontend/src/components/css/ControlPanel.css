@@ -3,7 +3,6 @@ body, html {
 }
 
 .panel {
-    background-color: aliceblue;
-    /*box-shadow: 8px 0 10px -1px rgba(0, 0, 0, 0.2);*/
+    background-color: #1d1f23;
     height: 100vh;
 }

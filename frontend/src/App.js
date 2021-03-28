@@ -22,11 +22,11 @@ function App() {
   const start = new Date(end - 3600000)
 
   return (
-    <div className="App">
+    <div className="App" style={{backgroundColor: '#313134'}}>
       <Router>
         <MyNavbar/>
-        <Container fluid style={{paddingLeft: 0, paddingRight: 0}}>
-          <Row>
+        <Container fluid style={{paddingLeft: 0}}>
+          <Row syle={{marginRight: 0}}>
             <Col xs={2} style={{paddingRight: 0}}>
               <ControlPanel start={start} end={end} setEnd={setEnd}/>
             </Col>

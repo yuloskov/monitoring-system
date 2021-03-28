@@ -11,15 +11,15 @@ import UserData from './UserData';
 
 function UserBoard() {
   return (
-    <>
+    <div>
       <div className="d-flex justify-content-center" style={{padding: '10px'}}>
         <Form inline>
           <FormControl type="text" placeholder="User id" className="mr-sm-2"/>
-          <Button variant="primary">Search</Button>
+          <Button variant="secondary">Search</Button>
         </Form>
       </div>
 
-      <Container fluid style={{paddingLeft: 0, paddingRight: 10}}>
+      <Container fluid style={{paddingLeft: 20, paddingRight: 20}}>
         <Row className="mt-3">
           <Col md={6} className="mb-3">
             <Card>
@@ -41,7 +41,7 @@ function UserBoard() {
           </Col>
         </Row>
       </Container>
-    </>
+    </div>
   );
 }
 
