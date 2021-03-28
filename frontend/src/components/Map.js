@@ -24,12 +24,18 @@ const circleSize = function (data, properties, filterValue) {
   return 46 + Math.round(count/100)  
 }
 
-export default function() {
+export default function({ start, end }) {
   const [points, setPoints] = useState(null)
 
   useEffect(() => {
     async function foo() {
-      const res = await fetch('http://localhost:5000/api/map/metrics/buff')
+      const res = await fetch('http://localhost:5000/api/map/metrics/buff', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({ start, end })
+      })
       const data = await res.json()
       const avg = data.map(x => x[0] * x[3]).reduce((x, y) => x + y, 0) / data.reduce((acc, p) => acc + p[3], 0)
       const transform = x => {
@@ -43,7 +49,7 @@ export default function() {
     }
     foo()
 
-  }, [])
+  }, [start, end])
 
   const [map, setMap] = useState(null)
   const ColorClusterer = React.useMemo(() => {
@@ -94,6 +100,7 @@ export default function() {
         },
         minClusterSize: 1
       });
+      map.geoObjects.removeAll();
       clusterer.add(points.map(p => new ymaps.Placemark(p[0], {color: p[1], count: p[2]})))
       map.geoObjects.add(clusterer);
 

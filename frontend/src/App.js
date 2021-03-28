@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -18,6 +18,9 @@ import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
 
 function App() {
+  const [end, setEnd] = useState(new Date('2021-03-15T20:00:00'));
+  const start = new Date(end - 3600000)
+
   return (
     <div className="App">
       <Router>
@@ -25,12 +28,12 @@ function App() {
         <Container fluid style={{paddingLeft: 0, paddingRight: 0}}>
           <Row>
             <Col xs={2} style={{paddingRight: 0}}>
-              <ControlPanel/>
+              <ControlPanel start={start} end={end} setEnd={setEnd}/>
             </Col>
 
             <Col style={{paddingLeft: 0}}>
               <Route path="/map">
-                <Map/>
+                <Map start={start} end={end}/>
               </Route>
               <Route path="/user_board">
                 <UserBoard/>

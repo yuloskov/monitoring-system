@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, g
+from flask import Flask, jsonify, g, request
 from flask_cors import CORS
 import psycopg2
 import os
@@ -60,9 +60,12 @@ def hello_world():
     return 'Hello'
 
 
-@app.route('/api/map/metrics/buff')
+@app.route('/api/map/metrics/buff', methods=['POST'])
 def metrics_buff():
-    g.cur.execute("select a.action_attributes_str as buff_time, b.longitude, b.latitude, count(*) from buffering_stop a, unique_ips b where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= '2021-03-14 18:00:00' and server_time < '2021-03-14 20:00:00' group by a.action_attributes_str, b.longitude, b.latitude")
+    start, end = request.json['start'], request.json['end']
+    logger.info(start)
+    logger.info(end)
+    g.cur.execute("select a.action_attributes_str as buff_time, b.longitude, b.latitude, count(*) from buffering_stop a, unique_ips b where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= %s and server_time < %s group by a.action_attributes_str, b.longitude, b.latitude", (start, end))
     return jsonify(g.cur.fetchall())
 
 if __name__ == '__main__':
