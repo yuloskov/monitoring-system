@@ -1,35 +1,31 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { withYMaps, YMaps, Map, Clusterer, Placemark, Circle, ObjectManager } from 'react-yandex-maps';
+import React, { useEffect, useState } from 'react';
+import { withYMaps, YMaps, Map, } from 'react-yandex-maps';
 
 const mapContainer = {
   width: 1000,
   height: 1000
 }
 
-class Point {
-  constructor(coordinates, color) {
-    this.coordinates = coordinates
-    this.color = color
-  }
-}
-
-const points = [
-  new Point([50,31], 100),
-  new Point([54,34], 100),
-  new Point([52,37], 100),
-  new Point([56,38], 100),
-  new Point([55,37], 0),
-]
-
 const geoCounter = function (data, properties, filterValue) {
-  return properties._data.geoObjects.length
+  return properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
 }
 
 const geoAvgColor = function (data, properties, filterValue) {
   const objects = properties._data.geoObjects
-  const sum = objects.reduce((acc, go) => acc + go.properties._data.color, 0)
-  const avg = (sum / objects.length) || 0
+  const metric = objects.reduce((acc, go) => {
+    const data = go.properties._data
+    return acc + data.color * data.count
+  }, 0)
+  const count = objects.reduce((acc, go) => {
+    return acc + go.properties._data.count
+  }, 0)
+  const avg = metric / count || 0
   return avg
+}
+
+const circleSize = function (data, properties, filterValue) {
+  const count = properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
+  return 46 + Math.round(count/100)  
 }
 
 export default function() {
@@ -38,8 +34,8 @@ export default function() {
   useEffect(() => {
     async function foo() {
       const res = await fetch('http://localhost:5000/zhopa')
-      const data = (await res.json()).slice(0, 1000)
-      const avg = data.map(x => x[0]).reduce((x, y) => x + y, 0) / 1000
+      const data = (await res.json()).slice(0, 3000)
+      const avg = data.map(x => x[0] * x[3]).reduce((x, y) => x + y, 0) / data.reduce((acc, p) => acc + p[3], 0)
       const transform = x => {
         const v = 50 + 50 * (avg - x) / avg
         if (v < 0) return 0
@@ -47,24 +43,27 @@ export default function() {
         return v
       }
 
-      setPoints(data.map(([met, lon, lat]) => new Point([lat, lon], transform(met))))
+      setPoints(data.map(([met, lon, lat, count]) => [[lat, lon], transform(met), count]))
     }
     foo()
 
   }, [])
 
+  const [map, setMap] = useState(null)
   const ColorClusterer = React.useMemo(() => {
     return ({ ymaps }) => {
+      if (!map) return ''
+
       ymaps.template.filtersStorage.add('count', geoCounter)
       ymaps.template.filtersStorage.add('avgcolor', geoAvgColor)
+      ymaps.template.filtersStorage.add('circlesize', circleSize)
       const ClusterIconLayout = ymaps.templateLayoutFactory.createClass(`
         <ymaps class="ymaps-2-1-78-svg-icon" style="
           position: absolute; width: 46px; height: 46px; left: -23px; top: -23px;"
         >
           <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="46"
-            height="46"
+            width="{{properties|circlesize}}"
             viewBox="0,0,400,400"
           >
             <g id="svgg">
@@ -82,39 +81,32 @@ export default function() {
             style="font: 13px Arial, sans-serif; position: absolute; text-align: center; left: 0px;top: 16px;width: 46px;height: 16px;"
           >
             <ymaps>
-              <ymaps class="ymaps-2-1-78-cluster-night-content">
+              <ymaps class="ymaps-2-1-78-cluster-night-content" style="color: black;">
                 {{ properties|count }}
               </ymaps>
             </ymaps>
           </ymaps>
         </ymaps>`
       )
-      return (
-        <Clusterer
-          options={{
-            preset: 'islands#invertedVioletClusterIcons',
-            groupByCoordinates: false,
-            clusterIconLayout: ClusterIconLayout,
-            clusterIconShape: {
-              type: 'Circle',
-              coordinates: [0, 0],
-              radius: 23
-            }
-          }}
-        >
-        {points.map((p, index) => (
-          <Placemark
-          key={index}
-          geometry={p.coordinates}
-          properties={{color: p.color}} />
-        ))}
-        </Clusterer>
-      )
+
+      var clusterer = new ymaps.Clusterer({
+        clusterIconLayout: ClusterIconLayout,
+        clusterIconShape: {
+          type: 'Circle',
+          coordinates: [0, 0],
+          radius: 23
+        },
+        minClusterSize: 1
+      });
+      clusterer.add(points.map(p => new ymaps.Placemark(p[0], {color: p[1], count: p[2]})))
+      map.geoObjects.add(clusterer);
+
+      return ''
     }
-  }, [points])
+  }, [points, map])
 
   const ConnectedColorClusterer = React.useMemo(() => {
-    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage'])
+    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer'])
   }, [ColorClusterer])
 
   if (!points)
@@ -128,7 +120,8 @@ export default function() {
             zoom: 4,
           }}
           width={900}
-          height={400}
+          height={900}
+          instanceRef={(map) => setMap(map)}
         >
           <ConnectedColorClusterer></ConnectedColorClusterer>
         </Map>
