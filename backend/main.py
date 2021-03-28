@@ -53,7 +53,7 @@ def hello_world():
 
 @app.route('/zhopa')
 def zhopa():
-    cur.execute("select a.action_attributes_str as buff_time, b.longitude, b.latitude from buffering_stop a, unique_ips b where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= '2021-03-14 18:00:00' and server_time < '2021-03-14 20:00:00'")
+    cur.execute("select a.action_attributes_str as buff_time, b.longitude, b.latitude, count(*) from buffering_stop a, unique_ips b where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= '2021-03-14 18:00:00' and server_time < '2021-03-14 20:00:00' group by a.action_attributes_str, b.longitude, b.latitude")
     return jsonify(cur.fetchall())
 
 if __name__ == '__main__':
