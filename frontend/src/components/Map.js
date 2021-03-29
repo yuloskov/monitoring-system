@@ -128,7 +128,7 @@ export default function({ start, end }) {
   if (!points)
     return (
       <div className="mt-5 mb-5">
-        <Spinner animation="border" role="status">
+        <Spinner animation="border" role="status" variant="secondary">
           <span className="sr-only">Loading...</span>
         </Spinner>
       </div>

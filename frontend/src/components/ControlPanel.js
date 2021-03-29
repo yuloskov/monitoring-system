@@ -10,12 +10,21 @@ import momentLocalizer from 'react-widgets-moment';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import {Route} from 'react-router-dom';
-import React from 'react';
+import React, {useState} from 'react';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
 
 Moment.locale('en');
 momentLocalizer();
 
 function ControlPanel({start, end, setEnd}) {
+  const [radioValue, setRadioValue] = useState('1');
+
+  const radios = [
+    {name: 'Mean Buff Time', value: '1'},
+    {name: 'Mean Quality', value: '2'},
+  ];
+
   return (
     <>
       <div className="panel">
@@ -37,7 +46,7 @@ function ControlPanel({start, end, setEnd}) {
             <Route path="/user_board">
               <div className="mb-1">
                 <InputGroup className="mb-3">
-                  <FormControl type="text" placeholder="User id" className="mr-sm-2"/>
+                  <FormControl type="text" placeholder="User id"/>
 
                   <InputGroup.Append>
                     <Button variant="secondary">Search</Button>
@@ -51,11 +60,35 @@ function ControlPanel({start, end, setEnd}) {
               <DateTimePicker disabled value={start}/>
             </div>
 
-            <div>
+            <div className="mb-1">
               <div style={{color: '#ffffff'}}>To</div>
               <DateTimePicker value={end} onChange={date => setEnd(date)}/>
             </div>
           </Row>
+
+          <Route path="/map">
+            <Row style={{paddingLeft: '10px'}}>
+              <div style={{color: '#ffffff'}} className="w-100">Options</div>
+            </Row>
+
+            <Row style={{paddingLeft: '10px', paddingRight: '10px'}}>
+              <ButtonGroup toggle vertical className="w-100">
+                {radios.map((radio, idx) => (
+                  <ToggleButton
+                    key={idx}
+                    type="radio"
+                    variant="secondary"
+                    name="radio"
+                    value={radio.value}
+                    checked={radioValue === radio.value}
+                    onChange={(e) => setRadioValue(e.currentTarget.value)}
+                  >
+                    {radio.name}
+                  </ToggleButton>
+                ))}
+              </ButtonGroup>
+            </Row>
+          </Route>
         </Container>
       </div>
     </>
