@@ -1,72 +1,77 @@
-import React, { useEffect, useState } from 'react';
-import { withYMaps, YMaps, Map, } from 'react-yandex-maps';
+import React, {useEffect, useState} from 'react';
+import {withYMaps, YMaps, Map,} from 'react-yandex-maps';
 import Spinner from 'react-bootstrap/Spinner';
 
-const cache = {}
+const cache = {};
 
 const geoCounter = function (data, properties, filterValue) {
-  return properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
-}
+  return properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0);
+};
 
 const geoAvgColor = function (data, properties, filterValue) {
-  const objects = properties._data.geoObjects
+  const objects = properties._data.geoObjects;
   const metric = objects.reduce((acc, go) => {
-    const data = go.properties._data
-    return acc + data.color * data.count
-  }, 0)
+    const data = go.properties._data;
+    return acc + data.color * data.count;
+  }, 0);
   const count = objects.reduce((acc, go) => {
-    return acc + go.properties._data.count
-  }, 0)
-  const avg = metric / count || 0
-  return avg
-}
+    return acc + go.properties._data.count;
+  }, 0);
+  const avg = metric / count || 0;
+  return avg;
+};
 
 const circleSize = function (data, properties, arg) {
-  if (arg === " 'cache' ") {
-    return cache.circleSize
+  if (arg === ' \'cache\' ') {
+    return cache.circleSize;
   } else {
-    const count = properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
-    const size = 50 + Math.round(count/90)
-    cache.circleSize = size
-    return size
+    const count = properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0);
+    const size = 50 + Math.round(count / 90);
+    cache.circleSize = size;
+    return size;
   }
-}
+};
 
-export default function({ start, end }) {
-  const [points, setPoints] = useState(null)
+function PointsMap({start, end, option}) {
+  const [points, setPoints] = useState(null);
+  const [updating, setUpdating] = useState(true);
 
   useEffect(() => {
-    async function foo() {
+    async function getBuff() {
+      setUpdating(true);
       const res = await fetch('http://localhost:5000/api/map/metrics/buff', {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
         },
-        body: JSON.stringify({ start, end })
-      })
-      const data = await res.json()
-      const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0)
+        body: JSON.stringify({start, end})
+      });
+      const data = await res.json();
+      const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0);
       const transform = x => {
-        const v = 50 + 50 * (avg - x) / avg
-        if (v < 0) return 0
-        if (v > 100) return 100
-        return v
-      }
+        const v = 50 + 50 * (avg - x) / avg;
+        if (v < 0) return 0;
+        if (v > 100) return 100;
+        return v;
+      };
 
-      setPoints(data.map(([met, lon, lat, count]) => [[lat, lon], transform(met), count]))
+      setPoints(data.map(([met, lon, lat, count]) => [[lat, lon], transform(met), count]));
+      setUpdating(false);
     }
-    foo()
 
-  }, [start, end])
+    if (option === 'buff')
+      getBuff();
 
-  const [map, setMap] = useState(null)
+  }, [start, end, option]);
+
+  const [map, setMap] = useState(null);
   const ColorClusterer = React.useMemo(() => {
-    return ({ ymaps }) => {
-      if (!map) return ''
+    return ({ymaps}) => {
+      if (!map) return '';
 
-      ymaps.template.filtersStorage.add('count', geoCounter)
-      ymaps.template.filtersStorage.add('avgcolor', geoAvgColor)
-      ymaps.template.filtersStorage.add('circlesize', circleSize)
+      ymaps.template.filtersStorage.add('count', geoCounter);
+      ymaps.template.filtersStorage.add('avgcolor', geoAvgColor);
+      ymaps.template.filtersStorage.add('circlesize', circleSize);
       const ClusterIconLayout = ymaps.templateLayoutFactory.createClass(`
         <ymaps class="ymaps-2-1-78-svg-icon">
           <ymaps
@@ -96,7 +101,7 @@ export default function({ start, end }) {
             </section>
           </ymaps>
         </ymaps>`
-      )
+      );
 
       const clusterer = new ymaps.Clusterer({
         clusterIconLayout: ClusterIconLayout,
@@ -108,24 +113,24 @@ export default function({ start, end }) {
         minClusterSize: 1
       });
       map.geoObjects.removeAll();
-      clusterer.add(points.map(p => new ymaps.Placemark(p[0], {color: p[1], count: p[2]})))
+      clusterer.add(points.map(p => new ymaps.Placemark(p[0], {color: p[1], count: p[2]})));
       map.geoObjects.add(clusterer);
       const zoomControl = new ymaps.control.ZoomControl({
         options: {
-            size: "small"
+          size: 'small'
         }
       });
       map.controls.add(zoomControl);
 
-      return ''
-    }
-  }, [points, map])
+      return '';
+    };
+  }, [points, map]);
 
   const ConnectedColorClusterer = React.useMemo(() => {
-    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl'])
-  }, [ColorClusterer])
+    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl']);
+  }, [ColorClusterer]);
 
-  if (!points)
+  if (!points || updating) {
     return (
       <div className="mt-5 mb-5">
         <Spinner animation="border" role="status" variant="secondary">
@@ -133,6 +138,8 @@ export default function({ start, end }) {
         </Spinner>
       </div>
     );
+  }
+
   return (
     <div>
       <YMaps>
@@ -152,5 +159,7 @@ export default function({ start, end }) {
         </Map>
       </YMaps>
     </div>
-  )
+  );
 }
+
+export default PointsMap;

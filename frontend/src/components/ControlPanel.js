@@ -10,19 +10,17 @@ import momentLocalizer from 'react-widgets-moment';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import {Route} from 'react-router-dom';
-import React, {useState} from 'react';
+import React from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
 Moment.locale('en');
 momentLocalizer();
 
-function ControlPanel({start, end, setEnd}) {
-  const [radioValue, setRadioValue] = useState('1');
-
+function ControlPanel({start, end, setEnd, option, setOption}) {
   const radios = [
-    {name: 'Mean Buff Time', value: '1'},
-    {name: 'Mean Quality', value: '2'},
+    {name: 'Mean Buff Time', value: 'buff'},
+    {name: 'Mean Quality', value: 'quality'},
   ];
 
   return (
@@ -80,8 +78,8 @@ function ControlPanel({start, end, setEnd}) {
                     variant="secondary"
                     name="radio"
                     value={radio.value}
-                    checked={radioValue === radio.value}
-                    onChange={(e) => setRadioValue(e.currentTarget.value)}
+                    checked={option === radio.value}
+                    onChange={(e) => setOption(e.currentTarget.value)}
                   >
                     {radio.name}
                   </ToggleButton>
