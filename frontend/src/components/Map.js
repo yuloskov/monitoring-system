@@ -1,15 +1,16 @@
+import { OPTION_BUFF, OPTION_QUALITY, YmapsModules } from '../constants';
 import React, {useEffect, useState} from 'react';
 import {withYMaps, YMaps, Map,} from 'react-yandex-maps';
 import Spinner from 'react-bootstrap/Spinner';
 
 const cache = {};
 
-const geoCounter = function (data, properties, filterValue) {
-  return properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0);
-};
+function geoCounter(data, properties) {
+  return properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
+}
 
-const geoAvgColor = function (data, properties, filterValue) {
-  const objects = properties._data.geoObjects;
+function geoAvgColor(data, properties) {
+  const objects = properties._data.geoObjects
   const metric = objects.reduce((acc, go) => {
     const data = go.properties._data;
     return acc + data.color * data.count;
@@ -21,31 +22,26 @@ const geoAvgColor = function (data, properties, filterValue) {
   return avg;
 };
 
-const circleSize = function (data, properties, arg) {
-  if (arg === ' \'cache\' ') {
-    return cache.circleSize;
+function circleSize(data, properties, arg) {
+  if (typeof arg === 'undefined') {
+    const count = properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0)
+    const size = Math.min(50 + Math.round(count/90), 100)
+    cache.circleSize = size
+    return size
   } else {
-    const count = properties._data.geoObjects.reduce((acc, go) => acc + go.properties._data.count, 0);
-    const size = 50 + Math.round(count / 90);
-    cache.circleSize = size;
-    return size;
+    return cache.circleSize
   }
 };
 
 function PointsMap({start, end, option}) {
+  const [map, setMap] = useState(null)
   const [points, setPoints] = useState(null);
   const [updating, setUpdating] = useState(true);
 
   useEffect(() => {
     async function getBuff() {
       setUpdating(true);
-      const res = await fetch('http://localhost:5000/api/map/metrics/buff', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({start, end})
-      });
+      const res = await fetch(`http://localhost:5000/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
       const data = await res.json();
       const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0);
       const transform = x => {
@@ -59,12 +55,11 @@ function PointsMap({start, end, option}) {
       setUpdating(false);
     }
 
-    if (option === 'buff')
-      getBuff();
+    if (option === OPTION_BUFF) getBuff();
+    // else if (option === OPTION_QUALITY) 
 
   }, [start, end, option]);
 
-  const [map, setMap] = useState(null);
   const ColorClusterer = React.useMemo(() => {
     return ({ymaps}) => {
       if (!map) return '';
@@ -127,7 +122,7 @@ function PointsMap({start, end, option}) {
   }, [points, map]);
 
   const ConnectedColorClusterer = React.useMemo(() => {
-    return withYMaps(ColorClusterer, true, ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl']);
+    return withYMaps(ColorClusterer, true, YmapsModules);
   }, [ColorClusterer]);
 
   if (!points || updating) {
@@ -141,24 +136,22 @@ function PointsMap({start, end, option}) {
   }
 
   return (
-    <div>
-      <YMaps>
-        <Map
-          style={{position: 'absolute', width: '100%', height: '100%'}}
-          defaultState={{
-            center: [50, 50],
-            zoom: 4,
-          }}
-          options={{
-            maxZoom: 10,
-            minZoom: 4
-          }}
-          instanceRef={(map) => setMap(map)}
-        >
-          <ConnectedColorClusterer></ConnectedColorClusterer>
-        </Map>
-      </YMaps>
-    </div>
+    <YMaps>
+      <Map
+        style={{position: 'absolute', width: '100%', height: '100%'}}
+        defaultState={{
+          center: [50, 50],
+          zoom: 4,
+        }}
+        options={{
+          maxZoom: 10,
+          minZoom: 4
+        }}
+        instanceRef={(map) => setMap(map)}
+      >
+        <ConnectedColorClusterer/>
+      </Map>
+    </YMaps>
   );
 }
 

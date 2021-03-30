@@ -7,6 +7,7 @@ import {
 import './theme.scss'
 
 
+import { OPTION_BUFF } from './constants';
 import PointsMap from './components/Map';
 import MyNavbar from './components/Navbar';
 import ControlPanel from './components/ControlPanel';
@@ -17,7 +18,7 @@ import UserBoard from './components/UserBoard';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
-  const [option, setOption] = useState('buff');
+  const [option, setOption] = useState(OPTION_BUFF);
   const start = new Date(end - 3600000)
 
   return (

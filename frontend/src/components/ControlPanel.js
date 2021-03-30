@@ -1,5 +1,6 @@
 import './css/ControlPanel.css';
 import 'react-widgets/dist/css/react-widgets.css';
+import { OPTION_BUFF, OPTION_QUALITY } from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -19,8 +20,8 @@ momentLocalizer();
 
 function ControlPanel({start, end, setEnd, option, setOption}) {
   const radios = [
-    {name: 'Mean Buff Time', value: 'buff'},
-    {name: 'Mean Quality', value: 'quality'},
+    {name: 'Mean Buff Time', value: OPTION_BUFF},
+    {name: 'Mean Quality', value: OPTION_QUALITY},
   ];
 
   return (
