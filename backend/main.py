@@ -6,9 +6,10 @@ import os
 import logging.config
 
 try:
-    conn = psycopg2.connect(f"dbname='{os.environ['POSTGRES_DB']}' user='{os.environ['POSTGRES_USER']}' host='{os.environ['DATABASE_URL']}' password='{os.environ['POSTGRES_PASSWORD']}'")
-except: 
-    print("Oopsie... I can not connect to database")    
+    conn = psycopg2.connect(
+        f"dbname='{os.environ['POSTGRES_DB']}' user='{os.environ['POSTGRES_USER']}' host='{os.environ['DATABASE_URL']}' password='{os.environ['POSTGRES_PASSWORD']}'")
+except:
+    print("Oopsie... I can not connect to database")
 
 LOGGER_CONFIG = {
     'version': 1,
@@ -67,17 +68,42 @@ def metrics_buff():
     start, end = request.args.get('start'), request.args.get('end')
     logger.info(start)
     logger.info(end)
-    g.cur.execute("select a.action_attributes_str as buff_time, b.longitude, b.latitude, count(*) from buffering_stop a, unique_ips b where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= %s and server_time < %s group by a.action_attributes_str, b.longitude, b.latitude", (start, end))
+    g.cur.execute(
+        """
+        select a.action_attributes_str as buff_time, b.longitude, b.latitude, 
+        count(*) from buffering_stop a, unique_ips b 
+        where a.action_attributes_str < 300000 and a.request_ip = b.ip 
+        and server_time >= %s and server_time < %s 
+        group by a.action_attributes_str, b.longitude, b.latitude
+        """,
+        (start, end),
+    )
     return jsonify(g.cur.fetchall())
 
 
-# @app.route('', methods=['GET'])
-# def metrics_quality():
-#     start, end = request.json['start'], request.json['end']
-#     logger.info(start)
-#     logger.info(end)
-#     g.cur.execute("select * where a.action_attributes_str < 300000 and a.request_ip = b.ip and server_time >= %s and server_time < %s group by a.action_attributes_str, b.longitude, b.latitude", (start, end))
-#     return jsonify(g.cur.fetchall())
+@app.route('/api/user_board/metrics/info', methods=['GET'])
+def user_info():
+    start, end = request.args.get('start'), request.args.get('end')
+    user_id = request.args.get('user_id')
+    fields = [
+        'user_browser',
+        'user_browser_version',
+        'user_os',
+        'user_os_version',
+    ]
+
+    g.cur.execute(
+        f"""
+        select distinct {', '.join(fields)}
+        from users where profile_id=%s and
+        server_time >= %s and server_time < %s
+        """,
+        (user_id, start, end)
+    )
+    res = g.cur.fetchall()
+    logger.info(res)
+
+    return jsonify([{k: v for k, v in zip(fields, r)} for r in res])
 
 
 if __name__ == '__main__':

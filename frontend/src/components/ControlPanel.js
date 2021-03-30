@@ -14,6 +14,7 @@ import {Route} from 'react-router-dom';
 import React from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import Form from 'react-bootstrap/Form';
 
 Moment.locale('en');
 momentLocalizer();
@@ -23,6 +24,21 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
     {name: 'Mean Buff Time', value: OPTION_BUFF},
     {name: 'Mean Quality', value: OPTION_QUALITY},
   ];
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target)
+
+    await getUserData(formData);
+  }
+
+  async function getUserData(formData) {
+    const user_id = formData.get('user_id');
+    console.log(user_id, start, end);
+    const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${user_id}`);
+    const userData = await res.json();
+    console.log(userData);
+  }
 
   return (
     <>
@@ -44,13 +60,15 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
           <Row style={{padding: '10px'}}>
             <Route path="/user_board">
               <div className="mb-1">
-                <InputGroup className="mb-3">
-                  <FormControl type="text" placeholder="User id"/>
+                <Form onSubmit={handleSubmit}>
+                  <InputGroup className="mb-3">
+                    <FormControl type="text" name="user_id" placeholder="User id"/>
 
-                  <InputGroup.Append>
-                    <Button variant="secondary">Search</Button>
-                  </InputGroup.Append>
-                </InputGroup>
+                    <InputGroup.Append>
+                      <Button variant="secondary" type="submit">Search</Button>
+                    </InputGroup.Append>
+                  </InputGroup>
+                </Form>
               </div>
             </Route>
 
