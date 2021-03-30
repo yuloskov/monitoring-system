@@ -16,7 +16,7 @@ import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
 
 function App() {
-  const [end, setEnd] = useState(new Date('2021-03-15T20:00:00'));
+  const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
   const [option, setOption] = useState('buff');
   const start = new Date(end - 3600000)
 

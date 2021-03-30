@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "moment": "^2.29.1",
-    "react-widgets-moment": "^4.0.30"
-  }
-}
