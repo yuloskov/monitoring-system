@@ -56,6 +56,28 @@ def teardown_request(exception):
     g.cur.close()
 
 
+@app.route('/api/board/qualitychart', methods=['GET'])
+def qualitychart():
+    profile_id = request.args.get('profile_id')
+    start = request.args.get('start')
+    end = request.args.get('end')
+
+    g.cur.execute("select action_result, server_time from qualities where profile_id=%s and server_time>=%s and server_time<=%s order by server_time;", (profile_id, start, end))
+    data =  [
+    {
+      'x': [],
+      'y': [],
+      'type': 'scatter'
+    }
+  ]
+    result = g.cur.fetchall()
+    for i in result:
+        data[0]['x'].append(i[1])
+        data[0]['y'].append(int(i[0]))
+    logger.info(jsonify(data).data)
+    return jsonify(data)
+
+
 @app.route('/')
 def hello_world():
     g.cur.execute("SELECT * FROM users LIMIT 10;")

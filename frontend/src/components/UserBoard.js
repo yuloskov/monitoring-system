@@ -3,11 +3,11 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import BarChart from './BarChart';
-import ScatterPlot from './ScatterPlot';
 import UserData from './UserData';
 import UserContentTable from './UserContentTable';
+import QualityChart from './QualityChart';
 
-function UserBoard() {
+function UserBoard({qualityChartData}) {
   return (
     <div>
       <Container fluid style={{paddingLeft: 20, paddingRight: 20}}>
@@ -28,7 +28,7 @@ function UserBoard() {
 
           <Col className="mb-3">
             <Card>
-              <ScatterPlot/>
+              <QualityChart data={qualityChartData}/>
             </Card>
           </Col>
         </Row>
