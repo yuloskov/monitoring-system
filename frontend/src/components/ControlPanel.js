@@ -1,16 +1,16 @@
+import React from 'react';
 import 'react-widgets/dist/css/react-widgets.css';
 import {OPTION_BUFF, OPTION_QUALITY} from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Link from 'react-router-dom/Link';
+import { Link } from 'react-router-dom';
 import {DateTimePicker} from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import {Route, useHistory} from 'react-router-dom';
-import React from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import Form from 'react-bootstrap/Form';
@@ -68,7 +68,7 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
 
             <div className="mb-1">
               <div style={{color: '#ffffff'}}>From</div>
-              <DateTimePicker disabled value={start}/>
+              <DateTimePicker disabled defaultValue={start}/>
             </div>
 
             <div className="mb-1">

@@ -44,27 +44,27 @@ function PointsMap({start, end, option}) {
     setUpdating(false);
   }
 
-  async function getBuff() {
-    const res = await fetch(`http://${host}/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
-    const data = await res.json();
-    const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0);
-    const transform = x => {
-      const v = 50 + 50 * (avg - x) / avg;
-      if (v < 0) return 0;
-      if (v > 100) return 100;
-      return v;
-    };
-
-    setPoints(data.map(([met, lon, lat, count]) => [[lat, lon], transform(met), count]));
-  }
-
-  async function getQuality() {
-    const res = await fetch(`http://${host}/api/map/metrics/quality?start=${start.toISOString()}&end=${end.toISOString()}`)
-    const data = await res.json();
-    setPoints(data.map(([q, lon, lat, count]) => [[lat, lon], q, count]))
-  }
-
   useEffect(() => {
+    async function getBuff() {
+      const res = await fetch(`http://${host}/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
+      const data = await res.json();
+      const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0);
+      const transform = x => {
+        const v = 50 + 50 * (avg - x) / avg;
+        if (v < 0) return 0;
+        if (v > 100) return 100;
+        return v;
+      };
+
+      setPoints(data.map(([met, lon, lat, count]) => [[lat, lon], transform(met), count]));
+    }
+
+    async function getQuality() {
+      const res = await fetch(`http://${host}/api/map/metrics/quality?start=${start.toISOString()}&end=${end.toISOString()}`)
+      const data = await res.json();
+      setPoints(data.map(([q, lon, lat, count]) => [[lat, lon], q, count]))
+    }
+
     if (option === OPTION_BUFF) withUpdating(getBuff);
     else if (option === OPTION_QUALITY) withUpdating(getQuality);
   }, [start, end, option]);
@@ -142,10 +142,20 @@ function PointsMap({start, end, option}) {
       if (option === OPTION_QUALITY) {
         clusterer.createCluster = function (center, geoObjects) {
           const clusterPlacemark = ymaps.Clusterer.prototype.createCluster.call(this, center, geoObjects)
+          const clusterData = {}
+          geoObjects.forEach(o => {
+            const color = o.options._options.iconColor
+            const weight = o.options._options.weight
+            if (typeof clusterData[color] === 'undefined') clusterData[color] = weight
+            else clusterData[color] += weight
+          })
           clusterPlacemark.properties.set({
-            data: geoObjects.map(o => {return {weight: o.options._options.weight, color: o.options._options.iconColor}})
+            data: Object.entries(clusterData).map(([color, weight]) => ({color, weight}))
           });
+          const getR = (base, mult) => (data) => base + mult * Math.log(data.reduce((acc, o) => acc + o.weight, 0))
           clusterPlacemark.options.set('iconLayout', 'default#pieChart');
+          clusterPlacemark.options.set('iconPieChartRadius', getR(13, 2))
+          clusterPlacemark.options.set('iconPieChartCoreRadius', getR(7, 1))
           return clusterPlacemark
         }
       }
@@ -161,7 +171,7 @@ function PointsMap({start, end, option}) {
 
       return '';
     };
-  }, [points, map]);
+  }, [points, map, option]);
 
   const ConnectedColorClusterer = React.useMemo(() => {
     return withYMaps(ColorClusterer, true, YmapsModules);

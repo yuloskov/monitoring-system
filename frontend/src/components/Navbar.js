@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function MyNavbar() {
   return (
     <Navbar bg="primary" variant="dark" expand="lg" sticky="top">
-      <Link to='/'><Navbar.Brand href="#home" >START metrics</Navbar.Brand></Link>
+      <Link to='/'><Navbar.Brand>START metrics</Navbar.Brand></Link>
     </Navbar>
   );
 }
