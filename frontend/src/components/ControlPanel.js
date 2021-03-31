@@ -14,8 +14,10 @@ import {Route, useHistory} from 'react-router-dom';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import Form from 'react-bootstrap/Form';
+import MomentTz from 'moment-timezone'
 
 Moment.locale('en');
+MomentTz.tz.setDefault("UTC");
 momentLocalizer();
 
 function ControlPanel({start, end, setEnd, option, setOption}) {

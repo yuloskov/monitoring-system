@@ -20,7 +20,8 @@
     "react-scripts": "4.0.3",
     "react-yandex-maps": "^4.6.0",
     "react-widgets-moment": "^4.0.30",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33"
   },
   "scripts": {
     "start": "react-scripts start",
