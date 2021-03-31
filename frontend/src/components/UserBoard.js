@@ -1,20 +1,22 @@
+import React, {useEffect} from 'react';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import BarChart from './BarChart';
-import UserData from './UserData';
+import UserInfo from './UserInfo';
 import UserContentTable from './UserContentTable';
 import QualityChart from './QualityChart';
 
-function UserBoard({qualityChartData}) {
+function UserBoard({userBoardData}) {
   return (
     <div>
       <Container fluid style={{paddingLeft: 20, paddingRight: 20}}>
         <Row className="mt-3">
           <Col md={6} className="mb-3">
             <Card>
-              <UserData/>
+              <UserInfo userInfo={userBoardData['info']}/>
             </Card>
           </Col>
         </Row>
@@ -28,7 +30,7 @@ function UserBoard({qualityChartData}) {
 
           <Col className="mb-3">
             <Card>
-              <QualityChart data={qualityChartData}/>
+              <QualityChart qualityChartData={userBoardData['qualityChart']}/>
             </Card>
           </Col>
         </Row>

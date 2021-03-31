@@ -56,20 +56,27 @@ def teardown_request(exception):
     g.cur.close()
 
 
-@app.route('/api/board/qualitychart', methods=['GET'])
-def qualitychart():
+@app.route('/api/user_board/metrics/quality_chart', methods=['GET'])
+def quality_chart():
+    start, end = request.args.get('start'), request.args.get('end')
     profile_id = request.args.get('profile_id')
-    start = request.args.get('start')
-    end = request.args.get('end')
 
-    g.cur.execute("select action_result, server_time from qualities where profile_id=%s and server_time>=%s and server_time<=%s order by server_time;", (profile_id, start, end))
-    data =  [
-    {
-      'x': [],
-      'y': [],
-      'type': 'scatter'
-    }
-  ]
+    g.cur.execute(
+        """
+        select action_result, server_time from qualities 
+        where profile_id=%s and server_time>=%s and server_time<=%s 
+        order by server_time
+        """,
+        (profile_id, start, end)
+    )
+
+    data = [
+        {
+            'x': [],
+            'y': [],
+            'type': 'scatter'
+        }
+    ]
     result = g.cur.fetchall()
     for i in result:
         data[0]['x'].append(i[1])
@@ -106,7 +113,7 @@ def metrics_buff():
 @app.route('/api/user_board/metrics/info', methods=['GET'])
 def user_info():
     start, end = request.args.get('start'), request.args.get('end')
-    user_id = request.args.get('user_id')
+    profile_id = request.args.get('profile_id')
     fields = [
         'user_browser',
         'user_browser_version',
@@ -120,7 +127,7 @@ def user_info():
         from users where profile_id=%s and
         server_time >= %s and server_time < %s
         """,
-        (user_id, start, end)
+        (profile_id, start, end)
     )
     res = g.cur.fetchall()
     logger.info(res)

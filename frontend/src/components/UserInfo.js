@@ -1,7 +1,11 @@
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
+import {useEffect} from 'react';
 
-function UserData() {
+function UserInfo({userInfo}) {
+  useEffect(() => {
+    console.log(userInfo);
+  });
   return (
     <>
       <Card.Header>User info</Card.Header>
@@ -9,7 +13,7 @@ function UserData() {
         <tbody>
         <tr>
           <th>Name</th>
-          <td>1aaaa</td>
+          <td>Anonymous</td>
         </tr>
         <tr>
           <th>UUID</th>
@@ -33,4 +37,4 @@ function UserData() {
   );
 }
 
-export default UserData;
+export default UserInfo;

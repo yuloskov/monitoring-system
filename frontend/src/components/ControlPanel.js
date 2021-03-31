@@ -1,6 +1,6 @@
 import './css/ControlPanel.css';
 import 'react-widgets/dist/css/react-widgets.css';
-import { OPTION_BUFF, OPTION_QUALITY } from '../constants';
+import {OPTION_BUFF, OPTION_QUALITY} from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -19,26 +19,36 @@ import Form from 'react-bootstrap/Form';
 Moment.locale('en');
 momentLocalizer();
 
-function ControlPanel({start, end, setEnd, option, setOption}) {
+function ControlPanel({start, end, setEnd, option, setOption, setUserBoardData}) {
   const radios = [
     {name: 'Mean Buff Time', value: OPTION_BUFF},
     {name: 'Mean Quality', value: OPTION_QUALITY},
   ];
 
+  const userBoardData = {};
+
   async function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.target)
+    const formData = new FormData(event.target);
 
-    await getUserData(formData);
+    userBoardData['info'] = await getUserInfo(formData);
+    userBoardData['qualityChart'] = await getQualityChartData(formData);
+    setUserBoardData(userBoardData);
   }
 
-  async function getUserData(formData) {
-    const user_id = formData.get('user_id');
-    console.log(user_id, start, end);
-    const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${user_id}`);
-    const userData = await res.json();
-    console.log(userData);
+  async function getUserInfo(formData) {
+    const profile_id = formData.get('user_id');
+    console.log(profile_id, start, end);
+    const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&profile_id=${profile_id}`);
+    return await res.json();
   }
+
+  async function getQualityChartData(formData) {
+    const profile_id = formData.get('user_id');
+    const res = await fetch(`http://localhost:5000/api/user_board/metrics/quality_chart?profile_id=${profile_id}&start=${start.toISOString()}&end=${end.toISOString()}`,);
+    return await res.json();
+  }
+
 
   return (
     <>
