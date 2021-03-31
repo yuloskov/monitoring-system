@@ -1,19 +1,25 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
+import { useParams } from 'react-router';
 
 function QualityChart({start, end}) {
-
-  const qualityChartData = [
-    {
-      x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-      y: [480, 480, 720],
-      type: 'scatter'
-    }
-  ];
+  const { userId } = useParams()
+  const [data, setData] = useState(null)
 
   useEffect(() => {
-    Plotly.newPlot('quality', qualityChartData, {height: 500});
-  }, [qualityChartData]);
+    async function getQualityChartData() {
+      const res = await fetch(`http://localhost:5000/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+      setData(await res.json());
+    }
+
+    getQualityChartData()
+  }, [userId, start, end])
+
+  useEffect(() => {
+    if (!data) return
+
+    Plotly.newPlot('quality', data, {height: 500});
+  }, [data]);
 
   return (
     <>

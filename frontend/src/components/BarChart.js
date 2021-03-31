@@ -32,7 +32,7 @@ function BarChart({start, end}) {
     ];
 
     Plotly.newPlot('bar', data, {height: 500});
-  });
+  }, [barData]);
 
   if (!barData) {
     return <h1>Loading</h1>
