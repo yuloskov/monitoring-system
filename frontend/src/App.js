@@ -17,14 +17,6 @@ import UserBoard from './components/UserBoard';
 import { OPTION_BUFF } from './constants';
 
 function App() {
-  // const defaultQCData = [
-  //   {
-  //     x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-  //     y: [480, 480, 720],
-  //     type: 'scatter'
-  //   }
-  // ];
-  const [userBoardData, setUserBoardData] = useState({});
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
   const [option, setOption] = useState(OPTION_BUFF);
   const start = new Date(end - 3600000)
@@ -36,15 +28,15 @@ function App() {
         <Container fluid style={{paddingLeft: 0}}>
           <Row syle={{marginRight: 0}}>
             <Col xs={2} style={{paddingRight: 0}}>
-              <ControlPanel start={start} end={end} setEnd={setEnd} option={option} setOption={setOption} setUserBoardData={setUserBoardData}/>
+              <ControlPanel start={start} end={end} setEnd={setEnd} option={option} setOption={setOption}/>
             </Col>
 
             <Col style={{paddingLeft: 0}}>
               <Route path="/map">
                 <PointsMap start={start} end={end} option={option}/>
               </Route>
-              <Route path="/user_board">
-                <UserBoard userBoardData={userBoardData} />
+              <Route path="/user_board/:userId">
+                <UserBoard start={start} end={end} />
               </Route>
             </Col>
           </Row>

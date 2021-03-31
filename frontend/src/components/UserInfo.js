@@ -1,11 +1,30 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
-import {useEffect} from 'react';
 
-function UserInfo({userInfo}) {
+function UserInfo({ start, end }) {
+  const { userId } = useParams()
+  const [userData, setUserData] = useState(null);
+
   useEffect(() => {
-    console.log(userInfo);
-  });
+    async function getUserData() {
+      console.log(userId, start, end);
+      const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      const userData = await res.json();
+      console.log(userData);
+      setUserData(userData);
+    }
+
+    getUserData()
+
+  }, [userId, start, end])
+
+
+  if (!userData) {
+    return <h1>Loading</h1>
+  }
+
   return (
     <>
       <Card.Header>User info</Card.Header>

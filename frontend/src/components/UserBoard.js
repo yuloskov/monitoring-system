@@ -9,14 +9,14 @@ import UserInfo from './UserInfo';
 import UserContentTable from './UserContentTable';
 import QualityChart from './QualityChart';
 
-function UserBoard({userBoardData}) {
+function UserBoard({ start, end }) {
   return (
     <div>
       <Container fluid style={{paddingLeft: 20, paddingRight: 20}}>
         <Row className="mt-3">
           <Col md={6} className="mb-3">
             <Card>
-              <UserInfo userInfo={userBoardData['info']}/>
+              <UserInfo start={start} end={end}/>
             </Card>
           </Col>
         </Row>
@@ -24,13 +24,13 @@ function UserBoard({userBoardData}) {
         <Row className="mt-3">
           <Col className="mb-3">
             <Card>
-              <BarChart/>
+              <BarChart start={start} end={end}/>
             </Card>
           </Col>
 
           <Col className="mb-3">
             <Card>
-              <QualityChart qualityChartData={userBoardData['qualityChart']}/>
+              <QualityChart start={start} end={end}/>
             </Card>
           </Col>
         </Row>
@@ -38,7 +38,7 @@ function UserBoard({userBoardData}) {
         <Row className="mt-3">
           <Col>
             <Card>
-              <UserContentTable/>
+              <UserContentTable start={start} end={end}/>
             </Card>
           </Col>
         </Row>

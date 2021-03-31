@@ -10,7 +10,7 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
-import {Route} from 'react-router-dom';
+import {Route, useHistory} from 'react-router-dom';
 import React from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -19,36 +19,21 @@ import Form from 'react-bootstrap/Form';
 Moment.locale('en');
 momentLocalizer();
 
-function ControlPanel({start, end, setEnd, option, setOption, setUserBoardData}) {
+function ControlPanel({start, end, setEnd, option, setOption}) {
+  const history = useHistory()
+
   const radios = [
     {name: 'Mean Buff Time', value: OPTION_BUFF},
     {name: 'Mean Quality', value: OPTION_QUALITY},
   ];
 
-  const userBoardData = {};
-
   async function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
+    const formData = new FormData(event.target)
+    const userId = formData.get('user_id');
 
-    userBoardData['info'] = await getUserInfo(formData);
-    userBoardData['qualityChart'] = await getQualityChartData(formData);
-    setUserBoardData(userBoardData);
+    history.push(`/user_board/${userId}`);
   }
-
-  async function getUserInfo(formData) {
-    const profile_id = formData.get('user_id');
-    console.log(profile_id, start, end);
-    const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&profile_id=${profile_id}`);
-    return await res.json();
-  }
-
-  async function getQualityChartData(formData) {
-    const profile_id = formData.get('user_id');
-    const res = await fetch(`http://localhost:5000/api/user_board/metrics/quality_chart?profile_id=${profile_id}&start=${start.toISOString()}&end=${end.toISOString()}`,);
-    return await res.json();
-  }
-
 
   return (
     <>

@@ -135,5 +135,26 @@ def user_info():
     return jsonify([{k: v for k, v in zip(fields, r)} for r in res])
 
 
+@app.route('/api/user_board/metrics/quality_histogram', methods=['GET'])
+def quality_bar():
+    start, end = request.args.get('start'), request.args.get('end')
+    user_id = request.args.get('user_id')
+
+    g.cur.execute(
+        f"""
+        select action_result as quality, count(*) as count
+        from qualities
+        where profile_id = %s
+        and server_time >= %s and server_time < %s
+        group by profile_id, quality;
+        """,
+        (user_id, start, end)
+    )
+    res = g.cur.fetchall()
+    logger.info(res)
+
+    return jsonify(res)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

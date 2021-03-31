@@ -3,7 +3,7 @@ import json
 import requests
 import time
 
-conn = psycopg2.connect(dbname='postgres', user='postgres', host='10.90.136.75', password='postgres')
+conn = psycopg2.connect(dbname='postgres', user='postgres', host='10.90.137.214', password='IAmTraktor')
 
 with conn.cursor() as cur:
     cur.itersize = 1000
