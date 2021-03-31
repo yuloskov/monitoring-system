@@ -133,12 +133,13 @@ def metrics_quality():
     return jsonify(g.cur.fetchall())
 
 
-
 @app.route('/api/user_board/metrics/info', methods=['GET'])
 def user_info():
     start, end = request.args.get('start'), request.args.get('end')
-    profile_id = request.args.get('profile_id')
+    profile_id = request.args.get('user_id')
     fields = [
+        'profile_id',
+        'device_type',
         'user_browser',
         'user_browser_version',
         'user_os',

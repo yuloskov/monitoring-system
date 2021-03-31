@@ -1,55 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 
-function UserInfo({ start, end }) {
-  const { userId } = useParams()
-  const [userData, setUserData] = useState(null);
+function UserInfo({start, end}) {
+  const {userId} = useParams();
+  const [systemInfo, setSystemInfo] = useState([]);
 
   useEffect(() => {
     async function getUserData() {
-      console.log(userId, start, end);
       const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const userData = await res.json();
-      console.log(userData);
-      setUserData(userData);
+      setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type}) => {
+        return [[user_os, user_os_version].join(' '), [user_browser, user_browser_version].join(' '), device_type];
+      }));
     }
 
-    getUserData()
+    getUserData();
 
-  }, [userId, start, end])
+  }, [userId, start, end]);
 
 
-  if (!userData) {
-    return <h1>Loading</h1>
+  if (!systemInfo) {
+    return <h1>Loading</h1>;
   }
 
   return (
     <>
       <Card.Header>User info</Card.Header>
-      <Table hover>
+      <Table hover bordered className="mb-0">
         <tbody>
         <tr>
           <th>Name</th>
           <td>Anonymous</td>
         </tr>
         <tr>
-          <th>UUID</th>
-          <td>1235</td>
+          <th>ProfileID</th>
+          <td>{userId}</td>
         </tr>
         <tr>
           <th>Location</th>
           <td>Innopolis</td>
         </tr>
+        </tbody>
+      </Table>
+
+      <Card.Header>System info</Card.Header>
+      <Table hover bordered className="mb-0">
+        <thead>
         <tr>
           <th>OS</th>
-          <td>sadas</td>
-        </tr>
-        <tr>
           <th>Browser</th>
-          <td>adafd</td>
+          <th>Device</th>
         </tr>
+        </thead>
+        <tbody>
+
+        {systemInfo.map(row => (
+          <tr>
+            {Object.values(row).map(rowValue => <td>{rowValue}</td>)}
+          </tr>
+        ))}
         </tbody>
       </Table>
     </>
