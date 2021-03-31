@@ -31,20 +31,22 @@ function App() {
             </Col>
           </Row>
 
-          <Row className="mr-0">
-            <Col xs={2} className="pr-0">
-              <ControlPanel start={start} end={end} setEnd={setEnd} option={option} setOption={setOption}/>
-            </Col>
+          <div>
+            <Row className="mr-0">
+              <Col xs={2} className="pr-0">
+                <ControlPanel start={start} end={end} setEnd={setEnd} option={option} setOption={setOption}/>
+              </Col>
 
-            <Col className="pl-0">
-              <Route path="/map">
-                <PointsMap start={start} end={end} option={option}/>
-              </Route>
-              <Route path="/user_board/:userId">
-                <UserBoard start={start} end={end}/>
-              </Route>
-            </Col>
-          </Row>
+              <Col className="pl-0">
+                <Route path="/map">
+                  <PointsMap start={start} end={end} option={option}/>
+                </Route>
+                <Route path="/user_board/:userId">
+                  <UserBoard start={start} end={end}/>
+                </Route>
+              </Col>
+            </Row>
+          </div>
         </Container>
       </Router>
     </div>

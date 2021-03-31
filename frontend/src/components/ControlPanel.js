@@ -36,7 +36,7 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
 
   return (
     <>
-      <div className="min-vh-100" style={{backgroundColor: '#1d1f23'}}>
+      <div className="min-vh-100 h-100" style={{backgroundColor: '#1d1f23'}}>
         <Container bg='primary'>
           <Row style={{padding: '10px'}}>
             <Link to="/map" style={{width: '100%'}}>
