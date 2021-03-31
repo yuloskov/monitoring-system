@@ -1,8 +1,9 @@
+from flask import Flask, jsonify, g, request
+from flask_cors import CORS
+from datetime import datetime
 import os
 import time
 import psycopg2
-from flask_cors import CORS
-from flask import Flask, jsonify, g, request
 
 import logging.config
 
@@ -73,7 +74,7 @@ def quality_chart():
 
     data = [
         {
-            'x': [],
+            'x': [datetime.fromisoformat(start[0:-1])],
             'y': [],
             'type': 'scatter'
         }
@@ -82,7 +83,11 @@ def quality_chart():
     for i in result:
         data[0]['x'].append(i[1])
         data[0]['y'].append(int(i[0]))
-    logger.info(jsonify(data).data)
+        data[0]['x'].append(i[1])
+        data[0]['y'].append(int(i[0]))
+    
+    data[0]['y'].append(0)
+
     return jsonify(data)
 
 
