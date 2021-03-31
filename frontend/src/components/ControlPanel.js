@@ -1,4 +1,3 @@
-import './css/ControlPanel.css';
 import 'react-widgets/dist/css/react-widgets.css';
 import {OPTION_BUFF, OPTION_QUALITY} from '../constants';
 import Button from 'react-bootstrap/Button';
@@ -37,7 +36,7 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
 
   return (
     <>
-      <div className="panel">
+      <div className="min-vh-100" style={{backgroundColor: '#1d1f23'}}>
         <Container bg='primary'>
           <Row style={{padding: '10px'}}>
             <Link to="/map" style={{width: '100%'}}>

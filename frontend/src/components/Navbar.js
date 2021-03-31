@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 function MyNavbar() {
   return (
-    <Navbar bg="primary" variant="dark" expand="lg">
-      <Link to='/'><Navbar.Brand href="#home" className="mr-auto">START metrics</Navbar.Brand></Link>
+    <Navbar bg="primary" variant="dark" expand="lg" sticky="top">
+      <Link to='/'><Navbar.Brand href="#home" >START metrics</Navbar.Brand></Link>
     </Navbar>
   );
 }
