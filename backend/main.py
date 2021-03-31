@@ -170,7 +170,6 @@ def quality_bar():
         (user_id, start, end)
     )
     res = g.cur.fetchall()
-    logger.info(res)
 
     return jsonify(res)
 

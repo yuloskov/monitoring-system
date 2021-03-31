@@ -25,8 +25,8 @@ function BarChart({start, end}) {
     const qs = [240, 360, 480, 720, 1080]
     const data = [
       {
-        x: qs,
-        y: qs,
+        x: qs.map(x => `${x}p`),
+        y: qs.map(x => (barData.find(y => y[0] === x) || [0])[1]),
         type: 'bar'
       }
     ];
