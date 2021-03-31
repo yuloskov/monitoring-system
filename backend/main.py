@@ -78,21 +78,12 @@ def quality_chart():
         (profile_id, start, end)
     )
 
-    data = [
-        {
-            'x': [datetime.fromisoformat(start[0:-1])],
-            'y': [],
-            'type': 'scatter'
-        }
-    ]
+    data = { 'x': [], 'y': []}
     result = g.cur.fetchall()
     for i in result:
-        data[0]['x'].append(i[1])
-        data[0]['y'].append(int(i[0]))
-        data[0]['x'].append(i[1])
-        data[0]['y'].append(int(i[0]))
+        data['x'].append(i[1])
+        data['y'].append(int(i[0]))
 
-    data[0]['y'].append(0)
 
     return jsonify(data)
 
