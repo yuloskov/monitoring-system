@@ -8,8 +8,14 @@ import psycopg2
 import logging.config
 
 try:
+    db = os.environ['POSTGRES_DB']
+    user = os.environ['POSTGRES_USER']
+    url = os.environ['DATABASE_URL']
+    passw = os.environ['POSTGRES_PASSWORD']
+
     conn = psycopg2.connect(
-        f"dbname='{os.environ['POSTGRES_DB']}' user='{os.environ['POSTGRES_USER']}' host='{os.environ['DATABASE_URL']}' password='{os.environ['POSTGRES_PASSWORD']}'")
+        f"dbname='{db}' user='{user}' host='{url}' password='{passw}'"
+    )
 except:
     print("Oopsie... I can not connect to database")
 
@@ -167,10 +173,28 @@ def content_table():
 
     g.cur.execute(
         f"""
-        select distinct content_id from users where profile_id=%s and
-        server_time >= %s and server_time < %s
+        select distinct content_id, device_type from users 
+        where profile_id=%s and server_time >= %s and server_time < %s
         """,
         (profile_id, start, end)
+    )
+
+    return jsonify(g.cur.fetchall())
+
+
+@app.route('/api/user_board/metrics/actions', methods=['GET'])
+def get_actions():
+    start, end = request.args.get('start'), request.args.get('end')
+    profile_id = request.args.get('user_id')
+    content_id = request.args.get('content_id')
+
+    g.cur.execute(
+        f"""
+           select distinct server_time, action_id, action_result from users 
+           where profile_id=%s and server_time >= %s and server_time < %s 
+           and content_id = %s
+           """,
+        (profile_id, start, end, content_id)
     )
 
     return jsonify(g.cur.fetchall())
