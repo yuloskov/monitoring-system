@@ -36,7 +36,7 @@ function UserBoard({ start, end }) {
         </Row>
 
         <Row className="mt-3">
-          <Col>
+          <Col className="mb-3">
             <Card>
               <UserContentTable start={start} end={end}/>
             </Card>

@@ -3,6 +3,7 @@ import {useParams} from 'react-router';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import {host} from '../constants';
+import Spinner from 'react-bootstrap/Spinner';
 
 function UserInfo({start, end}) {
   const {userId} = useParams();
@@ -23,7 +24,13 @@ function UserInfo({start, end}) {
 
 
   if (!systemInfo) {
-    return <h1>Loading</h1>;
+    return (
+      <div className="mt-5 mb-5">
+        <Spinner animation="border" role="status" variant="secondary">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
+    );
   }
 
   return (

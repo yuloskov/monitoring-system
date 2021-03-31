@@ -85,7 +85,7 @@ def quality_chart():
         data[0]['y'].append(int(i[0]))
         data[0]['x'].append(i[1])
         data[0]['y'].append(int(i[0]))
-    
+
     data[0]['y'].append(0)
 
     return jsonify(data)
@@ -158,6 +158,22 @@ def user_info():
     logger.info(res)
 
     return jsonify([{k: v for k, v in zip(fields, r)} for r in res])
+
+
+@app.route('/api/user_board/metrics/content_table', methods=['GET'])
+def content_table():
+    start, end = request.args.get('start'), request.args.get('end')
+    profile_id = request.args.get('user_id')
+
+    g.cur.execute(
+        f"""
+        select distinct content_id from users where profile_id=%s and
+        server_time >= %s and server_time < %s
+        """,
+        (profile_id, start, end)
+    )
+
+    return jsonify(g.cur.fetchall())
 
 
 @app.route('/api/user_board/metrics/quality_histogram', methods=['GET'])
