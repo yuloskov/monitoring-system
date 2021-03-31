@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
+import {host} from '../constants';
 
 function UserInfo({start, end}) {
   const {userId} = useParams();
@@ -9,7 +10,7 @@ function UserInfo({start, end}) {
 
   useEffect(() => {
     async function getUserData() {
-      const res = await fetch(`http://localhost:5000/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      const res = await fetch(`http://${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const userData = await res.json();
       setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type}) => {
         return [[user_os, user_os_version].join(' '), [user_browser, user_browser_version].join(' '), device_type];

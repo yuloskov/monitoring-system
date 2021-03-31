@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
 import { useParams } from 'react-router';
+import {host} from '../constants';
 
 function QualityChart({start, end}) {
   const { userId } = useParams()
@@ -8,7 +9,7 @@ function QualityChart({start, end}) {
 
   useEffect(() => {
     async function getQualityChartData() {
-      const res = await fetch(`http://localhost:5000/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+      const res = await fetch(`http://${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       setData(await res.json());
     }
 

@@ -1,4 +1,4 @@
-import { OPTION_BUFF, OPTION_QUALITY, YmapsModules } from '../constants';
+import { OPTION_BUFF, OPTION_QUALITY, YmapsModules, host } from '../constants';
 import React, {useEffect, useState} from 'react';
 import {withYMaps, YMaps, Map} from 'react-yandex-maps';
 import Spinner from 'react-bootstrap/Spinner';
@@ -38,14 +38,14 @@ function PointsMap({start, end, option}) {
   const [points, setPoints] = useState(null);
   const [updating, setUpdating] = useState(true);
 
-  function withUpdating(f) {
+  async function withUpdating(f) {
     setUpdating(true);
-    f()
+    await f()
     setUpdating(false);
   }
 
   async function getBuff() {
-    const res = await fetch(`http://localhost:5000/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
+    const res = await fetch(`http://${host}/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
     const data = await res.json();
     const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0);
     const transform = x => {
@@ -59,7 +59,7 @@ function PointsMap({start, end, option}) {
   }
 
   async function getQuality() {
-    const res = await fetch(`http://localhost:5000/api/map/metrics/quality?start=${start.toISOString()}&end=${end.toISOString()}`)
+    const res = await fetch(`http://${host}/api/map/metrics/quality?start=${start.toISOString()}&end=${end.toISOString()}`)
     const data = await res.json();
     setPoints(data.map(([q, lon, lat, count]) => [[lat, lon], q, count]))
   }
