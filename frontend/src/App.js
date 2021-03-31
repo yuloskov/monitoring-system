@@ -14,11 +14,11 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
-import { OPTION_BUFF } from './constants';
+import { OPTION_QUALITY } from './constants';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
-  const [option, setOption] = useState(OPTION_BUFF);
+  const [option, setOption] = useState(OPTION_QUALITY);
   const start = new Date(end - 3600000)
 
   return (

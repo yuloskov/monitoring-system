@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, g, request
-from flask_cors import CORS
-import psycopg2
 import os
+import time
+import psycopg2
+from flask_cors import CORS
+from flask import Flask, jsonify, g, request
 
 import logging.config
 
@@ -108,6 +109,24 @@ def metrics_buff():
         (start, end),
     )
     return jsonify(g.cur.fetchall())
+
+
+@app.route('/api/map/metrics/quality', methods=['GET'])
+def metrics_quality():
+    start, end = request.args.get('start'), request.args.get('end')
+    exec_start = time.time()
+    g.cur.execute(
+        """
+        select q.action_result as quality, u.longitude, u.latitude, count(*)
+        from qualities q, unique_ips u
+        where q.request_ip = u.ip and server_time >= %s and server_time < %s
+        group by q.action_result, u.longitude, u.latitude
+        """,
+        (start, end)
+    )
+    logger.info(f'Query time: {time.time() - exec_start} sec')
+    return jsonify(g.cur.fetchall())
+
 
 
 @app.route('/api/user_board/metrics/info', methods=['GET'])
