@@ -8,6 +8,7 @@ import UserInfo from './UserInfo';
 import UserContentTable from './UserContentTable';
 import QualityChart from './QualityChart';
 import BufferingPlot from './BufferingPlot';
+import {primary} from '../constants'
 
 function UserBoard({ start, end }) {
   return (
@@ -29,13 +30,13 @@ function UserBoard({ start, end }) {
 
         <Row className="mt-3">
           <Col className="mb-3">
-            <Card>
+            <Card style={{backgroundColor:primary}}>
               <BarChart start={start} end={end}/>
             </Card>
           </Col>
 
           <Col className="mb-3">
-            <Card>
+            <Card style={{backgroundColor:primary}}>
               <QualityChart start={start} end={end}/>
             </Card>
           </Col>

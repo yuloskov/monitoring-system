@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
-import {useParams} from 'react-router';
-import {host, tickformatstops} from '../constants';
+import { useParams } from 'react-router';
+import { host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
-function QualityChart({start, end}) {
-  const {userId} = useParams();
+
+function QualityChart({ start, end }) {
+  const { userId } = useParams();
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -14,9 +15,10 @@ function QualityChart({start, end}) {
       const json = await res.json();
       const data = [{
         ...json,
-        'line': {'shape': 'vh'},
+        'line': { 'shape': 'vh', 'width': 3, 'color': graphcolor },
         'type': 'scatter'
-      }];
+
+      }]
       data[0].x = data[0].x.map((str) => {
         str = new Date(str).toISOString();
         return str;
@@ -31,18 +33,37 @@ function QualityChart({start, end}) {
     if (!data) return;
     const layout = {
       height: 500,
+      paper_bgcolor: bgcolor,
+      plot_bgcolor: bgcolor,
       xaxis: {
         title: 'timestamps',
         showline: true,
         showgrid: false,
         showticklabels: true,
-        linecolor: 'rgb(204,204,204)',
+        titlefont:{
+          color: lightgray
+        },
+        tickcolor: lightgray,
+        tickfont:{
+          color: '#fff'
+        },
+        linecolor: lightgray,
         linewidth: 2,
         tickformatstops: tickformatstops,
       },
       yaxis: {
         title: 'video quality',
+        titlefont:{
+          color: lightgray
+        },
+        tickfont:{
+          color: '#fff'
+        },
+        showgrid: true,
+        gridcolor: gridcolor,
         tickmode: 'array',
+        showticklabels: true,
+
         tickvals: [240, 360, 480, 540, 720, 1080, 1440, 2160]
       },
     };
@@ -60,7 +81,7 @@ function QualityChart({start, end}) {
   }
   return (
     <>
-      <div id="quality">Quality changes timeline</div>
+      <div id="quality" style={{color:'#fff'}}>Quality changes timeline</div>
     </>
   );
 }

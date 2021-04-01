@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Plotly from 'plotly.js-basic-dist';
-import {useParams} from 'react-router';
-import {host} from '../constants';
+import { useParams } from 'react-router';
+import { host, graphcolor, bgcolor, lightgray, gridcolor } from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
 
-function BarChart({start, end}) {
-  const {userId} = useParams();
+function BarChart({ start, end }) {
+  const { userId } = useParams();
   const [barData, setBarData] = useState(null);
 
   useEffect(() => {
@@ -30,11 +30,38 @@ function BarChart({start, end}) {
       {
         x: qs.map(x => `${x}p`),
         y: qs.map(x => (barData.find(y => y[0] === x) || [0])[1]),
-        type: 'bar'
+        type: 'bar',
+        marker: {color:graphcolor}
       }
     ];
+    const layout = {
+      height: 500,
+      paper_bgcolor: bgcolor,
+      plot_bgcolor: bgcolor,
+      xaxis: {
+        showline: true,
+        showgrid: false,
+        showticklabels: true,
+        tickcolor: lightgray,
+        tickfont: {
+          color: '#fff'
+        },
+        linecolor: lightgray,
+        linewidth: 2,        
+      },
+      yaxis: {
+        tickfont: {
+          color: '#fff'
+        },
+        showgrid: true,
+        gridcolor: gridcolor,
+        tickmode: 'array',
+        showline: false,
+        showticklabels: true,
 
-    Plotly.newPlot('bar', data, {height: 500});
+      },
+    };
+    Plotly.newPlot('bar', data, layout);
   }, [barData]);
 
   if (!barData) {
@@ -48,7 +75,7 @@ function BarChart({start, end}) {
 
   return (
     <>
-      <div id="bar">Quality distribution</div>
+      <div id="bar" style={{color:'#fff'}}>Quality distribution</div>
     </>
   );
 }
