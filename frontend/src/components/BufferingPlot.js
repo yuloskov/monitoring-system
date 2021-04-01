@@ -1,23 +1,45 @@
 import React, {useEffect, useState} from 'react';
-import Plotly from 'plotly.js-basic-dist';
+import Plotly from 'plotly.js';
 import {useParams} from 'react-router';
-import {host, tickformatstops} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
+import { host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
 
 function BufferingPlot({start, end}) {
   const {userId} = useParams();
   const [data, setData] = useState([]);
   const layout = {
     height: 500,
+    bargap:0.1,
+    paper_bgcolor: bgcolor,
+    plot_bgcolor: bgcolor,
     xaxis: {
-      title: 'timestamps',
+      title: 'Buffering duration (msec)',
       showline: true,
       showgrid: false,
       showticklabels: true,
-      linecolor: 'rgb(204,204,204)',
+      titlefont:{
+        color: lightgray
+      },
+      tickcolor: lightgray,
+      tickfont:{
+        color: '#fff'
+      },
+      linecolor: lightgray,
       linewidth: 2,
-      tickformatstops: tickformatstops,
     },
+    yaxis: {
+      title: 'count',
+      titlefont:{
+        color: lightgray
+      },
+      tickfont:{
+        color: '#fff'
+      },
+      showgrid: true,
+      gridcolor: gridcolor,
+      tickmode: 'array',
+      showticklabels: true,
+    }
   };
 
   useEffect(() => {
@@ -25,15 +47,12 @@ function BufferingPlot({start, end}) {
       const res = await fetch(`http://${host}/api/user_board/metrics/buff?user_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       const json = await res.json();
       const data = [{
-        ...json,
-        'line': {'shape': 'vh'},
-        'type': 'scatter'
+        x: json,
+        type: 'histogram',
+        marker:{
+          color: graphcolor
+        }
       }];
-
-      data[0].x = data[0].x.map((str) => {
-        str = new Date(str).toISOString();
-        return str;
-      });
       setData(data);
     }
 
@@ -43,7 +62,7 @@ function BufferingPlot({start, end}) {
 
   useEffect(() => {
     if (!data) return;
-
+    
     Plotly.newPlot('buff', data, layout);
   });
 

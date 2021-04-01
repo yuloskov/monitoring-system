@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Plotly from 'plotly.js-basic-dist';
+import Plotly from 'plotly.js';
 import { useParams } from 'react-router';
 import { host, graphcolor, bgcolor, lightgray, gridcolor } from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
@@ -8,7 +8,33 @@ import Spinner from 'react-bootstrap/Spinner';
 function BarChart({ start, end }) {
   const { userId } = useParams();
   const [barData, setBarData] = useState(null);
+  const layout = {
+    height: 500,
+    paper_bgcolor: bgcolor,
+    plot_bgcolor: bgcolor,
+    xaxis: {
+      showline: true,
+      showgrid: false,
+      showticklabels: true,
+      tickcolor: lightgray,
+      tickfont: {
+        color: '#fff'
+      },
+      linecolor: lightgray,
+      linewidth: 2,
+    },
+    yaxis: {
+      tickfont: {
+        color: '#fff'
+      },
+      showgrid: true,
+      gridcolor: gridcolor,
+      tickmode: 'array',
+      showline: false,
+      showticklabels: true,
 
+    },
+  };
   useEffect(() => {
     async function getBarData() {
       console.log(userId, start, end);
@@ -31,36 +57,9 @@ function BarChart({ start, end }) {
         x: qs.map(x => `${x}p`),
         y: qs.map(x => (barData.find(y => y[0] === x) || [0])[1]),
         type: 'bar',
-        marker: {color:graphcolor}
+        marker: { color: graphcolor }
       }
     ];
-    const layout = {
-      height: 500,
-      paper_bgcolor: bgcolor,
-      plot_bgcolor: bgcolor,
-      xaxis: {
-        showline: true,
-        showgrid: false,
-        showticklabels: true,
-        tickcolor: lightgray,
-        tickfont: {
-          color: '#fff'
-        },
-        linecolor: lightgray,
-        linewidth: 2,        
-      },
-      yaxis: {
-        tickfont: {
-          color: '#fff'
-        },
-        showgrid: true,
-        gridcolor: gridcolor,
-        tickmode: 'array',
-        showline: false,
-        showticklabels: true,
-
-      },
-    };
     Plotly.newPlot('bar', data, layout);
   }, [barData]);
 

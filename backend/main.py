@@ -167,15 +167,14 @@ def user_buff():
 
     g.cur.execute(
         """
-        select action_attributes_str, server_time from users 
+        select action_attributes_str from users 
         where profile_id=%s and server_time>=%s and 
         server_time<=%s and action_id='buffer_stop' order by server_time
         """,
         (profile_id, start, end)
     )
     result = g.cur.fetchall()
-    data = convert_to_coords(result)
-    return jsonify(data)
+    return jsonify([ int(s[0])  for s in  result])
 
 
 @app.route('/api/user_board/metrics/content_table', methods=['GET'])

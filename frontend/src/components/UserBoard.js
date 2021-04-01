@@ -22,8 +22,8 @@ function UserBoard({start, end}) {
           </Col>
 
           <Col className="mb-3">
-            <Card>
-              <Card.Header>Buffering stop timeline</Card.Header>
+            <Card style={{backgroundColor:primary}}>
+              <Card.Header style={{color: '#fff'}}>Buffering duration histogram</Card.Header>
               <BufferingPlot start={start} end={end}/>
             </Card>
           </Col>

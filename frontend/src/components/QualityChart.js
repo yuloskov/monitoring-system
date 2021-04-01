@@ -1,14 +1,49 @@
 import React, {useEffect, useState} from 'react';
-import Plotly from 'plotly.js-basic-dist';
-import {useParams} from 'react-router';
-import {host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
+import Plotly from 'plotly.js';
+import { useParams } from 'react-router';
+import { host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
 
 function QualityChart({start, end}) {
   const {userId} = useParams();
   const [data, setData] = useState(null);
+  const layout = {
+    height: 500,
+    paper_bgcolor: bgcolor,
+    plot_bgcolor: bgcolor,
+    xaxis: {
+      title: 'timestamps',
+      showline: true,
+      showgrid: false,
+      showticklabels: true,
+      titlefont:{
+        color: lightgray
+      },
+      tickcolor: lightgray,
+      tickfont:{
+        color: '#fff'
+      },
+      linecolor: lightgray,
+      linewidth: 2,
+      tickformatstops: tickformatstops,
+    },
+    yaxis: {
+      title: 'video quality',
+      titlefont:{
+        color: lightgray
+      },
+      tickfont:{
+        color: '#fff'
+      },
+      showgrid: true,
+      gridcolor: gridcolor,
+      tickmode: 'array',
+      showticklabels: true,
 
+      tickvals: [240, 360, 480, 540, 720, 1080, 1440, 2160]
+    },
+  };
   useEffect(() => {
     async function getQualityChartData() {
       const res = await fetch(`http://${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
@@ -31,42 +66,6 @@ function QualityChart({start, end}) {
 
   useEffect(() => {
     if (!data) return;
-    const layout = {
-      height: 500,
-      paper_bgcolor: bgcolor,
-      plot_bgcolor: bgcolor,
-      xaxis: {
-        title: 'timestamps',
-        showline: true,
-        showgrid: false,
-        showticklabels: true,
-        titlefont:{
-          color: lightgray
-        },
-        tickcolor: lightgray,
-        tickfont: {
-          color: '#fff'
-        },
-        linecolor: lightgray,
-        linewidth: 2,
-        tickformatstops: tickformatstops,
-      },
-      yaxis: {
-        title: 'video quality',
-        titlefont: {
-          color: lightgray
-        },
-        tickfont: {
-          color: '#fff'
-        },
-        showgrid: true,
-        gridcolor: gridcolor,
-        tickmode: 'array',
-        showticklabels: true,
-
-        tickvals: [240, 360, 480, 540, 720, 1080, 1440, 2160]
-      },
-    };
     Plotly.newPlot('quality', data, layout);
   }, [data]);
 
