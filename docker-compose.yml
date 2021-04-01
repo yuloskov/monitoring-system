@@ -18,5 +18,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=IAmTraktor
       - POSTGRES_DB=postgres
-      - DATABASE_URL=10.90.137.214
+    extra_hosts:
+      - 'db:10.90.137.214'
 

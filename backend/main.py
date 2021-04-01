@@ -10,11 +10,10 @@ import logging.config
 try:
     db = os.environ['POSTGRES_DB']
     user = os.environ['POSTGRES_USER']
-    url = os.environ['DATABASE_URL']
     passw = os.environ['POSTGRES_PASSWORD']
 
     conn = psycopg2.connect(
-        f"dbname='{db}' user='{user}' host='{url}' password='{passw}'"
+        f"dbname='{db}' user='{user}' host='db' password='{passw}'"
     )
 except:
     print("Oopsie... I can not connect to database")
