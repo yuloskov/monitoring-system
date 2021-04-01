@@ -8,21 +8,22 @@ import UserInfo from './UserInfo';
 import UserContentTable from './UserContentTable';
 import QualityChart from './QualityChart';
 import BufferingPlot from './BufferingPlot';
-import {primary} from '../constants'
+import {primary} from '../constants';
 
-function UserBoard({ start, end }) {
+function UserBoard({start, end}) {
   return (
     <div>
       <Container fluid style={{paddingLeft: 20, paddingRight: 20}}>
         <Row className="mt-3">
           <Col className="mb-3">
-            <Card>
+            <Card style={{backgroundColor: primary}}>
               <UserInfo start={start} end={end}/>
             </Card>
           </Col>
 
           <Col className="mb-3">
             <Card>
+              <Card.Header>Buffering stop timeline</Card.Header>
               <BufferingPlot start={start} end={end}/>
             </Card>
           </Col>
@@ -30,13 +31,15 @@ function UserBoard({ start, end }) {
 
         <Row className="mt-3">
           <Col className="mb-3">
-            <Card style={{backgroundColor:primary}}>
+            <Card style={{backgroundColor: primary}}>
+              <Card.Header style={{color: '#fff'}}>Quality distribution</Card.Header>
               <BarChart start={start} end={end}/>
             </Card>
           </Col>
 
           <Col className="mb-3">
-            <Card style={{backgroundColor:primary}}>
+            <Card style={{backgroundColor: primary}}>
+              <Card.Header style={{color: '#fff'}}>Quality changes timeline</Card.Header>
               <QualityChart start={start} end={end}/>
             </Card>
           </Col>
@@ -44,7 +47,7 @@ function UserBoard({ start, end }) {
 
         <Row className="mt-3">
           <Col className="mb-3">
-            <Card>
+            <Card style={{backgroundColor: primary}}>
               <UserContentTable start={start} end={end}/>
             </Card>
           </Col>

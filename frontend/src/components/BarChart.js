@@ -75,7 +75,7 @@ function BarChart({ start, end }) {
 
   return (
     <>
-      <div id="bar" style={{color:'#fff'}}>Quality distribution</div>
+      <div id="bar"/>
     </>
   );
 }

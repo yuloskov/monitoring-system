@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
-import {host} from '../constants';
+import {host, primary} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
 function UserInfo({start, end}) {
@@ -35,8 +35,8 @@ function UserInfo({start, end}) {
 
   return (
     <>
-      <Card.Header>User info</Card.Header>
-      <Table hover bordered className="mb-0">
+      <Card.Header style={{color: '#fff'}}>User info</Card.Header>
+      <Table hover bordered className="mb-0" style={{backgroundColor: primary, color: '#fff'}}>
         <tbody>
         <tr>
           <th>Name</th>
@@ -53,8 +53,8 @@ function UserInfo({start, end}) {
         </tbody>
       </Table>
 
-      <Card.Header>System info</Card.Header>
-      <Table hover bordered className="mb-0">
+      <Card.Header style={{color: '#fff'}}>System info</Card.Header>
+      <Table hover bordered className="mb-0" style={{backgroundColor: primary, color: '#fff'}}>
         <thead>
         <tr>
           <th>OS</th>

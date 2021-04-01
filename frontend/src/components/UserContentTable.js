@@ -1,7 +1,7 @@
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import React, {useEffect, useState} from 'react';
-import {host} from '../constants';
+import {host, primary} from '../constants';
 import {useParams} from 'react-router';
 import './css/table.css';
 
@@ -32,8 +32,8 @@ function UserContentTable({start, end}) {
 
   return (
     <>
-      <Card.Header>Content List</Card.Header>
-      <Table hover bordered className="mb-0">
+      <Card.Header style={{color: '#fff'}}>Content List</Card.Header>
+      <Table hover bordered className="mb-0" style={{backgroundColor: primary, color: '#fff'}}>
         <thead>
         <tr>
           <th>Content ID</th>
@@ -48,8 +48,8 @@ function UserContentTable({start, end}) {
         </tbody>
       </Table>
 
-      <Card.Header>Content Actions</Card.Header>
-      <Table hover bordered className="mb-0">
+      <Card.Header style={{color: '#fff'}}>Content Actions</Card.Header>
+      <Table hover bordered className="mb-0" style={{backgroundColor: primary, color: '#fff'}}>
         <thead>
         <tr>
           <th>Server Time</th>

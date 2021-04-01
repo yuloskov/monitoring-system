@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import Plotly from 'plotly.js-basic-dist';
-import { useParams } from 'react-router';
-import { host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
+import {useParams} from 'react-router';
+import {host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
 
-function QualityChart({ start, end }) {
-  const { userId } = useParams();
+function QualityChart({start, end}) {
+  const {userId} = useParams();
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -15,10 +15,10 @@ function QualityChart({ start, end }) {
       const json = await res.json();
       const data = [{
         ...json,
-        'line': { 'shape': 'vh', 'width': 3, 'color': graphcolor },
+        'line': {'shape': 'vh', 'width': 3, 'color': graphcolor},
         'type': 'scatter'
 
-      }]
+      }];
       data[0].x = data[0].x.map((str) => {
         str = new Date(str).toISOString();
         return str;
@@ -44,7 +44,7 @@ function QualityChart({ start, end }) {
           color: lightgray
         },
         tickcolor: lightgray,
-        tickfont:{
+        tickfont: {
           color: '#fff'
         },
         linecolor: lightgray,
@@ -53,10 +53,10 @@ function QualityChart({ start, end }) {
       },
       yaxis: {
         title: 'video quality',
-        titlefont:{
+        titlefont: {
           color: lightgray
         },
-        tickfont:{
+        tickfont: {
           color: '#fff'
         },
         showgrid: true,
@@ -81,7 +81,7 @@ function QualityChart({ start, end }) {
   }
   return (
     <>
-      <div id="quality" style={{color:'#fff'}}>Quality changes timeline</div>
+      <div id="quality"/>
     </>
   );
 }

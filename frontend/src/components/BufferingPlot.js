@@ -59,7 +59,7 @@ function BufferingPlot({start, end}) {
 
   return (
     <>
-      <div id="buff">Buffering stop</div>
+      <div id="buff"/>
     </>
   );
 }
