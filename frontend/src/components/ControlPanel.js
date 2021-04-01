@@ -1,6 +1,6 @@
 import React from 'react';
 import 'react-widgets/dist/css/react-widgets.css';
-import {OPTION_BUFF, OPTION_QUALITY} from '../constants';
+import {bglightcolor, OPTION_BUFF, OPTION_QUALITY, primary} from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -56,8 +56,12 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
               <div className="mb-1">
                 <Form onSubmit={handleSubmit}>
                   <InputGroup className="mb-3">
-                    <FormControl type="text" name="user_id" placeholder="User id"/>
-
+                    <FormControl
+                      type="text"
+                      name="user_id"
+                      placeholder="User id"
+                      style={{backgroundColor: bglightcolor, borderColor: bglightcolor, color: '#fff'}}
+                    />
                     <InputGroup.Append>
                       <Button variant="secondary" type="submit">Search</Button>
                     </InputGroup.Append>

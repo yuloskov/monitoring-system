@@ -36,4 +36,5 @@ export const
     bgcolor = '#1d1f23',
     lightgray = 'rgb(204,204,204)',
     gridcolor = 'rgb(104,104,104)',
-    primary = '#1d1f23'
+    primary = '#1d1f23',
+    bglightcolor = '#313134'

@@ -14,7 +14,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
-import {OPTION_QUALITY} from './constants';
+import {bglightcolor, OPTION_QUALITY} from './constants';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
@@ -22,7 +22,7 @@ function App() {
   const start = new Date(end - 3600000);
 
   return (
-    <div className="App" style={{backgroundColor: '#313134'}}>
+    <div className="App" style={{backgroundColor: bglightcolor}}>
       <Router>
         <Container fluid className="pr-0 pl-0">
           <Row className="mr-0">
