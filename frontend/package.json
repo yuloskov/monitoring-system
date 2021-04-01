@@ -19,7 +19,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-yandex-maps": "^4.6.0",
-    "react-widgets-moment": "^4.0.30",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33"
   },
