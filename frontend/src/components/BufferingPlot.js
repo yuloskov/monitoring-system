@@ -4,19 +4,32 @@ import {useParams} from 'react-router';
 import {host, tickformatstops} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
-function QualityChart({start, end}) {
+function BufferingPlot({start, end}) {
   const {userId} = useParams();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const layout = {
+    height: 500,
+    xaxis: {
+      title: 'timestamps',
+      showline: true,
+      showgrid: false,
+      showticklabels: true,
+      linecolor: 'rgb(204,204,204)',
+      linewidth: 2,
+      tickformatstops: tickformatstops,
+    },
+  };
 
   useEffect(() => {
-    async function getQualityChartData() {
-      const res = await fetch(`http://${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+    async function getBuffChartDataData() {
+      const res = await fetch(`http://${host}/api/user_board/metrics/buff?user_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       const json = await res.json();
       const data = [{
         ...json,
         'line': {'shape': 'vh'},
         'type': 'scatter'
       }];
+
       data[0].x = data[0].x.map((str) => {
         str = new Date(str).toISOString();
         return str;
@@ -24,30 +37,15 @@ function QualityChart({start, end}) {
       setData(data);
     }
 
-    getQualityChartData();
+    getBuffChartDataData();
+
   }, [userId, start, end]);
 
   useEffect(() => {
     if (!data) return;
-    const layout = {
-      height: 500,
-      xaxis: {
-        title: 'timestamps',
-        showline: true,
-        showgrid: false,
-        showticklabels: true,
-        linecolor: 'rgb(204,204,204)',
-        linewidth: 2,
-        tickformatstops: tickformatstops,
-      },
-      yaxis: {
-        title: 'video quality',
-        tickmode: 'array',
-        tickvals: [240, 360, 480, 540, 720, 1080, 1440, 2160]
-      },
-    };
-    Plotly.newPlot('quality', data, layout);
-  }, [data]);
+
+    Plotly.newPlot('buff', data, layout);
+  });
 
   if (!data) {
     return (
@@ -58,11 +56,12 @@ function QualityChart({start, end}) {
       </div>
     );
   }
+
   return (
     <>
-      <div id="quality">Quality changes timeline</div>
+      <div id="buff">Buffering stop</div>
     </>
   );
 }
 
-export default QualityChart;
+export default BufferingPlot;

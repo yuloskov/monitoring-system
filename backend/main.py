@@ -52,6 +52,15 @@ app = Flask(__name__)
 CORS(app)
 
 
+def convert_to_coords(input_data):
+    data = {'x': [], 'y': []}
+    for i in input_data:
+        data['x'].append(i[1])
+        data['y'].append(int(i[0]))
+
+    return data
+
+
 @app.before_request
 def before_request():
     logger.info('Creating cursor')
@@ -78,13 +87,8 @@ def quality_chart():
         (profile_id, start, end)
     )
 
-    data = { 'x': [], 'y': []}
     result = g.cur.fetchall()
-    for i in result:
-        data['x'].append(i[1])
-        data['y'].append(int(i[0]))
-
-
+    data = convert_to_coords(result)
     return jsonify(data)
 
 
@@ -155,6 +159,24 @@ def user_info():
     logger.info(res)
 
     return jsonify([{k: v for k, v in zip(fields, r)} for r in res])
+
+
+@app.route('/api/user_board/metrics/buff', methods=['GET'])
+def user_buff():
+    start, end = request.args.get('start'), request.args.get('end')
+    profile_id = request.args.get('user_id')
+
+    g.cur.execute(
+        """
+        select action_attributes_str, server_time from users 
+        where profile_id=%s and server_time>=%s and 
+        server_time<=%s and action_id='buffer_stop' order by server_time
+        """,
+        (profile_id, start, end)
+    )
+    result = g.cur.fetchall()
+    data = convert_to_coords(result)
+    return jsonify(data)
 
 
 @app.route('/api/user_board/metrics/content_table', methods=['GET'])
