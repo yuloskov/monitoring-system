@@ -19,8 +19,12 @@ function UserInfo({start, end}) {
       const userData = await res.json();
       const ip = userData.length > 0 ? userData[0].request_ip : null;
       if (ip !== null) {
-        const location_response = await fetch(`http://ip-api.com/json/${ip}`);
-        setCity((await location_response.json()).city);
+        try {
+          const location_response = await fetch(`http://ip-api.com/json/${ip}`);
+          setCity((await location_response.json()).city);
+        } catch (error) {
+          setCity('');
+        }
         console.log(city);
       }
       setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type, request_ip}) => {
@@ -39,6 +43,7 @@ function UserInfo({start, end}) {
       console.log(kpi);
       setKpi(kpi);
     }
+    console.log(systemInfo)
 
     getUserKPI();
 
