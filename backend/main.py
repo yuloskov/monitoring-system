@@ -215,9 +215,34 @@ def quality_bar():
         """,
         (user_id, start, end)
     )
-    res = g.cur.fetchall()
 
-    return jsonify(res)
+    return jsonify(g.cur.fetchall())
+
+
+@app.route('/api/user_board/metrics/kpi', methods=['GET'])
+def kpi():
+    start, end = request.args.get('start'), request.args.get('end')
+    user_id = request.args.get('user_id')
+
+    g.cur.execute(
+        f"""
+        select a.*, b.*, least(1, cbrt(4 * a.metric1 * b.metric2 * b.metric3)) as metric
+        from (select coalesce(avg(action_result) / max(action_result), 1) as metric1
+            from qualities
+            where profile_id = %(user_id)
+                and server_time >= %(start)
+                and server_time < %(end)) as a,
+            (select 1.0 / log(2 + count(*))                                              as metric2,
+                    coalesce(avg(action_attributes_str) / max(action_attributes_str), 1) as metric3
+            from buffering_stop_new
+            where profile_id = %(user_id)
+                and server_time >= %(start)
+                and server_time < %(end)) as b;
+        """,
+        {'user_id': user_id, 'start': start, 'end': end}
+    )
+
+    return jsonify(g.cur.fetchone())
 
 
 if __name__ == '__main__':
