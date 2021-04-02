@@ -8,7 +8,6 @@ let maxMet;
 let minMet;
 
 function legendGen(ymaps, MapGen) {
-  let prev = null
   return (map) => {
     const LegendControlClass = function (options) {
       LegendControlClass.superclass.constructor.call(this, options);
@@ -28,8 +27,11 @@ function legendGen(ymaps, MapGen) {
       }
     });
 
-    if (prev) map.controls.remove(prev)
-    prev = map.controls.add(new LegendControlClass(), {
+    map.controls.each(c => {
+      map.controls.remove(c)
+      return true
+    })
+    map.controls.add(new LegendControlClass(), {
       float: 'none',
       position: {
         top: 15,
