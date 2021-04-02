@@ -17,7 +17,8 @@ function UserInfo({start, end}) {
     async function getUserData() {
       const res = await fetch(`http://${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const userData = await res.json();
-      const location_response = await fetch(`http://ip-api.com/json/${userData[0].request_ip}`);
+      const ip = userData.length > 0 ? userData[0].request_ip : ''
+      const location_response = await fetch(`http://ip-api.com/json/${ip}`);
       setCity((await location_response.json()).city);
       console.log(city);
       setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type, request_ip}) => {
