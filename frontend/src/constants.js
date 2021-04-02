@@ -11,7 +11,8 @@ export const
         720: QUALITY_MEDIUM,
     },
     YmapsModules = ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl', 'layout.PieChart', 'util.augment', 'collection.Item'],
-    host = 'https://api.startmetrics.sgmakarov.ru',
+    //Change for https://api.startmetrics.sgmakarov.ru
+    host = 'http://localhost:5000',
     tickformatstops = [{
           'dtickrange': [null, 1000],
           'value': '%H:%M:%S.%L ms'

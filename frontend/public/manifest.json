@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Start Metrics",
+  "name": "Analytics dashboard for Start streaming service",
   "icons": [
     {
       "src": "favicon.ico",
