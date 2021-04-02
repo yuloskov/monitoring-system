@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  react:
+    build: frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.smart.rule=Host(`startmetrics.sgmakarov.ru`)"
+      - "traefik.http.routers.smart.entrypoints=websecure"
+      - "traefik.http.routers.smart.tls.certresolver=letsencrypt"
+      - "traefik.http.services.smart.loadbalancer.server.port=3000"
+    networks:
+      - proxy
+  
+  web:
+    build: backend
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=cn7vlDky584Lo3rk
+      - POSTGRES_DB=postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.startmetrics.sgmakarov.ru`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api.loadbalancer.server.port=5000"
+    extra_hosts:
+      - 'db:34.89.182.168'
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external:
+      name: 'public'

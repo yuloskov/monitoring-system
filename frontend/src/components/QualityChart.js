@@ -49,7 +49,7 @@ function QualityChart({start, end}) {
   const [data, setData] = useState(null);
   useEffect(() => {
     async function getQualityChartData() {
-      const res = await fetch(`http://${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+      const res = await fetch(`${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       const json = await res.json();
 
       const data = [{

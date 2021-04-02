@@ -13,7 +13,7 @@ function UserInfo({start, end}) {
 
   useEffect(() => {
     async function getInfo() {
-      const res = await fetch(`http://${host}/api/content_board/metrics/info?content_id=${contentId}`);
+      const res = await fetch(`${host}/api/content_board/metrics/info?content_id=${contentId}`);
       const title = await res.json();
       setTitle(title);
     }

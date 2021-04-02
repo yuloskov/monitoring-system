@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 import time
 import psycopg2
+import requests
 
 import logging.config
 
@@ -323,6 +324,13 @@ def kpi():
         {'user_id': user_id, 'start': start, 'end': end}
     )
     return jsonify(g.cur.fetchone())
+
+
+@app.route('/api/ip_to_city', methods=['GET'])
+def ip_to_city():
+    ip = request.args.get('ip')
+    r = requests.get(f'http://ip-api.com/json/{ip}?fields=city')
+    return r.json()
 
 
 if __name__ == '__main__':

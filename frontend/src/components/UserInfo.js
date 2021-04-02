@@ -15,12 +15,12 @@ function UserInfo({start, end}) {
 
   useEffect(() => {
     async function getUserData() {
-      const res = await fetch(`http://${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      const res = await fetch(`${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const userData = await res.json();
       const ip = userData.length > 0 ? userData[0].request_ip : null;
       if (ip !== null) {
         try {
-          const location_response = await fetch(`http://ip-api.com/json/${ip}`);
+          const location_response = await fetch(`${host}/api/ip_to_city?ip=${ip}`);
           setCity((await location_response.json()).city);
         } catch (error) {
           setCity('');
@@ -38,7 +38,7 @@ function UserInfo({start, end}) {
 
   useEffect(() => {
     async function getUserKPI() {
-      const res = await fetch(`http://${host}/api/user_board/metrics/kpi?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      const res = await fetch(`${host}/api/user_board/metrics/kpi?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const kpi = await res.json();
       console.log(kpi);
       setKpi(kpi);

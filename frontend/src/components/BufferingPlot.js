@@ -48,9 +48,9 @@ function BufferingPlot({ start, end }) {
     async function getBuffChartDataData() {
       let res;
       if(window.location.pathname.includes('/user_board')){
-        res = await fetch(`http://${host}/api/user_board/metrics/buff?user_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+        res = await fetch(`${host}/api/user_board/metrics/buff?user_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       } else {
-        res = await fetch(`http://${host}/api/content_board/metrics/buff?content_id=${contentId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+        res = await fetch(`${host}/api/content_board/metrics/buff?content_id=${contentId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       }
       const json = await res.json();
       console.log(json)

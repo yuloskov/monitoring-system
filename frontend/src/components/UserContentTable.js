@@ -13,7 +13,7 @@ function UserContentTable({start, end}) {
 
   useEffect(() => {
     async function getData() {
-      const res = await fetch(`http://${host}/api/user_board/metrics/content_table?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      const res = await fetch(`${host}/api/user_board/metrics/content_table?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const contentData = await res.json();
       setContentData(contentData);
     }
@@ -23,7 +23,7 @@ function UserContentTable({start, end}) {
 
   async function loadActions(data) {
     const content_id = data[1];
-    const res = await fetch(`http://${host}/api/user_board/metrics/actions?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}&content_id=${content_id}`);
+    const res = await fetch(`${host}/api/user_board/metrics/actions?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}&content_id=${content_id}`);
     const actionsData = await res.json();
     setActionsData(actionsData);
   }

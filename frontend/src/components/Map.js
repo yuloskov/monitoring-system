@@ -50,7 +50,7 @@ export default ({ start, end }) => {
 
       useEffect(() => {
         async function getBuff() {
-          const res = await fetch(`http://${host}/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
+          const res = await fetch(`${host}/api/map/metrics/buff?start=${start.toISOString()}&end=${end.toISOString()}`)
           const data = await res.json();
           const avg = data.reduce((acc, p) => acc + p[0] * p[3], 0) / data.reduce((acc, p) => acc + p[3], 0);
           const transform = x => {
@@ -69,7 +69,7 @@ export default ({ start, end }) => {
         }
 
         async function getQuality() {
-          const res = await fetch(`http://${host}/api/map/metrics/quality?start=${start.toISOString()}&end=${end.toISOString()}`)
+          const res = await fetch(`${host}/api/map/metrics/quality?start=${start.toISOString()}&end=${end.toISOString()}`)
           const data = await res.json();
           setPoints(data.map(([q, lon, lat, count]) => [[lat, lon], q, count]))
         }
