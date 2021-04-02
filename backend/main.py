@@ -7,14 +7,17 @@ import psycopg2
 
 import logging.config
 
-try:
-    db = os.environ['POSTGRES_DB']
-    user = os.environ['POSTGRES_USER']
-    passw = os.environ['POSTGRES_PASSWORD']
+db = os.environ['POSTGRES_DB']
+user = os.environ['POSTGRES_USER']
+passw = os.environ['POSTGRES_PASSWORD']
 
-    conn = psycopg2.connect(
+def create_conn():
+    return psycopg2.connect(
         f"dbname='{db}' user='{user}' host='db' password='{passw}'"
     )
+
+try:
+    conn = create_conn()
 except:
     print("Oopsie... I can not connect to database")
 
@@ -53,7 +56,11 @@ CORS(app)
 
 @app.before_request
 def before_request():
+    global conn
     logger.info('Creating cursor')
+    if conn.closed != 0:
+        logger.info('RECREATING CONNECTION')
+        conn = create_conn()
     g.cur = conn.cursor()
     logger.info('Created cursor')
 
