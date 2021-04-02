@@ -30,6 +30,11 @@ function QualityChart({start, end}) {
     },
     yaxis: {
       title: 'video quality',
+      type: 'category',
+      categoryorder: 'array',
+      categoryarray: [240, 360, 480, 720, 1080],
+      tickvals: [240, 360, 480, 720, 1080],
+      ticktext: ['240p', '360p', '480p', '720p', '1080p'],
       titlefont:{
         color: lightgray
       },
@@ -38,26 +43,26 @@ function QualityChart({start, end}) {
       },
       showgrid: true,
       gridcolor: gridcolor,
-      tickmode: 'array',
+      // tickmode: 'array',
       showticklabels: true,
-
-      tickvals: [240, 360, 480, 540, 720, 1080, 1440, 2160]
     },
   };
   useEffect(() => {
     async function getQualityChartData() {
       const res = await fetch(`http://${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
       const json = await res.json();
-      const data = [{
-        ...json,
-        'line': {'shape': 'vh', 'width': 3, 'color': graphcolor},
-        'type': 'scatter'
 
-      }];
-      data[0].x = data[0].x.map((str) => {
-        str = new Date(str).toISOString();
-        return str;
-      });
+      const data = [{
+        x: json.map(x => x[1]).map((str) => new Date(str).toISOString()),
+        y: json.map(x => x[0]),
+        line: {
+          shape: 'hvh',
+          width: 3,
+          color: graphcolor
+        },
+        type: 'scatter'
+      }]
+
       setData(data);
     }
 

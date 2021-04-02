@@ -51,15 +51,6 @@ app = Flask(__name__)
 CORS(app)
 
 
-def convert_to_coords(input_data):
-    data = {'x': [], 'y': []}
-    for i in input_data:
-        data['x'].append(i[1])
-        data['y'].append(int(i[0]))
-
-    return data
-
-
 @app.before_request
 def before_request():
     logger.info('Creating cursor')
@@ -85,10 +76,7 @@ def quality_chart():
         """,
         (profile_id, start, end)
     )
-
-    result = g.cur.fetchall()
-    data = convert_to_coords(result)
-    return jsonify(data)
+    return jsonify(g.cur.fetchall())
 
 
 @app.route('/')
