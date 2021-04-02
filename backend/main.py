@@ -98,8 +98,6 @@ def hello_world():
 @app.route('/api/map/metrics/buff', methods=['GET'])
 def metrics_buff():
     start, end = request.args.get('start'), request.args.get('end')
-    logger.info(start)
-    logger.info(end)
     g.cur.execute(
         """
         select a.action_attributes_str as buff_time, b.longitude, b.latitude, 
@@ -153,7 +151,6 @@ def user_info():
         (profile_id, start, end)
     )
     res = g.cur.fetchall()
-    logger.info(res)
 
     return jsonify([{k: v for k, v in zip(fields, r)} for r in res])
 
@@ -190,7 +187,6 @@ def content_buff():
         (content_id, start, end)
     )
     result = g.cur.fetchall()
-    logger.info(result)
     return jsonify([int(s[0]) for s in result])
 
 
@@ -279,6 +275,29 @@ def content_quality_bar():
     )
 
     return jsonify(g.cur.fetchall())
+
+
+@app.route('/api/content_board/metrics/views_chart', methods=['GET'])
+def content_views_chart():
+    start, end = request.args.get('start'), request.args.get('end')
+    content_id = request.args.get('content_id')
+    epsilon = (datetime.fromisoformat(end[:-1]) - datetime.fromisoformat(start[:-1])).seconds // 10
+    logger.info(epsilon)
+    g.cur.execute(
+        f"""
+        select count(distinct profile_id), to_timestamp(round(extract('epoch' from server_time) / %(epsilon)s) * %(epsilon)s)
+        from qualities_new
+        where server_time >= %(start)s
+        and server_time <= %(end)s
+        and content_id = %(content_id)s
+
+        group by round(extract('epoch' from server_time) / %(epsilon)s)
+        order by round(extract('epoch' from server_time) / %(epsilon)s);
+        """,
+        {'content_id': content_id, 'start': start, 'end': end, 'epsilon': epsilon}
+    )
+    result = g.cur.fetchall()
+    return jsonify(result)
 
 
 @app.route('/api/user_board/metrics/kpi', methods=['GET'])

@@ -7,11 +7,12 @@ import BarChart from './BarChart';
 import BufferingPlot from './BufferingPlot';
 import {primary} from '../constants';
 import ContentInfo from './ContentInfo';
+import ContentViewsChart from './ContentViewsChart';
 
-function ContentBoard({start, end}) {
+function ContentBoard({ start, end }) {
   return (
     <div>
-      <Container fluid style={{paddingLeft: 20, paddingRight: 20}}>
+      <Container fluid style={{ paddingLeft: 20, paddingRight: 20 }}>
         <Row className="mt-3">
           <Col className="mb-3">
             <Card style={{backgroundColor: primary}}>
@@ -28,9 +29,17 @@ function ContentBoard({start, end}) {
           </Col>
 
           <Col className="mb-3">
-            <Card style={{backgroundColor: primary}}>
-              <Card.Header style={{color: '#fff'}}>Quality distribution</Card.Header>
-              <BarChart start={start} end={end}/>
+            <Card style={{ backgroundColor: primary }}>
+              <Card.Header style={{ color: '#fff' }}>Quality distribution</Card.Header>
+              <BarChart start={start} end={end} />
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="mb-3">
+            <Card style={{ backgroundColor: primary }}>
+              <Card.Header style={{ color: '#fff' }}>Active viewers</Card.Header>
+              <ContentViewsChart start={start} end={end} />
             </Card>
           </Col>
         </Row>
