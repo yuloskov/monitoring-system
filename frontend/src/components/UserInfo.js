@@ -8,13 +8,16 @@ import Spinner from 'react-bootstrap/Spinner';
 function UserInfo({start, end}) {
   const {userId} = useParams();
   const [systemInfo, setSystemInfo] = useState([]);
-
+  const [city, setCity] = useState();
   useEffect(() => {
     async function getUserData() {
       const res = await fetch(`http://${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const userData = await res.json();
-      setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type}) => {
-        return [[user_os, user_os_version].join(' '), [user_browser, user_browser_version].join(' '), device_type];
+      const location_response = await fetch(`http://ip-api.com/json/${userData[0].request_ip}`);
+      setCity((await location_response.json()).city)
+      console.log(city)
+      setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type, request_ip}) => {
+        return [[user_os, user_os_version].join(' '), [user_browser, user_browser_version].join(' '), device_type, request_ip];
       }));
     }
 
@@ -48,7 +51,7 @@ function UserInfo({start, end}) {
         </tr>
         <tr>
           <th>Location</th>
-          <td>Innopolis</td>
+          <td>{city}</td>
         </tr>
         </tbody>
       </Table>
@@ -60,6 +63,7 @@ function UserInfo({start, end}) {
           <th>OS</th>
           <th>Browser</th>
           <th>Device</th>
+          <th>ip</th>
         </tr>
         </thead>
         <tbody>

@@ -132,6 +132,7 @@ def user_info():
         'user_browser_version',
         'user_os',
         'user_os_version',
+        'request_ip'
     ]
 
     g.cur.execute(
