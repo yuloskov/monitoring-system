@@ -42,6 +42,7 @@ function legendGen(ymaps, MapGen) {
 }
 
 export default ({ start, end }) => {
+  console.log(start, end)
   const {option = OPTION_QUALITY} = useParams()
   const ColorClusterer = React.useMemo(() => {
     return ({ ymaps, MapGen, updateLegend },) => {

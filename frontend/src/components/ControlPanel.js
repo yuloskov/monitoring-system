@@ -65,6 +65,11 @@ function ControlPanel({ setStart, end, setEnd }) {
     }
   }
 
+  function changeDate(x) {
+    setEnd(x)
+    setStart(new Date(x - interval.id * 1000))
+  }
+
   return (
     <>
       <div className="min-vh-100 h-100" style={{ backgroundColor: '#1d1f23' }}>
@@ -127,7 +132,7 @@ function ControlPanel({ setStart, end, setEnd }) {
             </Route>
             <div className="mb-1">
               <div style={{ color: '#ffffff' }}>Range end</div>
-              <DateTimePicker value={end} onChange={date => setEnd(date)} />
+              <DateTimePicker value={end} onChange={changeDate} />
             </div>
             <div className="mb-1">
               <div style={{ color: '#ffffff' }}>Range length</div>
