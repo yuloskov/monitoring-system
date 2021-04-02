@@ -62,7 +62,7 @@ export default function momentLocalizer() {
 
     format(value, format, culture) {
       const m = getMoment(culture, value)
-      return (format === 'lll' ? m.tz('UTC') : m).format(format)
+      return (format === 'lll' || format === 'LT' ? m.tz('UTC') : m).format(format)
     }
   }
 

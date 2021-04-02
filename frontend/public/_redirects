@@ -1,0 +1,2 @@
+/api/* http://34.107.96.182/api/:splat 301
+/*  /index.html  200
