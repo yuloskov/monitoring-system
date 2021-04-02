@@ -194,6 +194,19 @@ def content_buff():
     return jsonify([int(s[0]) for s in result])
 
 
+@app.route('/api/content_board/metrics/info', methods=['GET'])
+def content_info():
+    content_id = request.args.get('content_id')
+    g.cur.execute(
+        """
+        select content_title from content_titles where content_id=%s
+        """,
+        (content_id, )
+    )
+
+    return jsonify(g.cur.fetchall())
+
+
 @app.route('/api/user_board/metrics/content_table', methods=['GET'])
 def content_table():
     start, end = request.args.get('start'), request.args.get('end')
@@ -247,6 +260,7 @@ def user_quality_bar():
     )
 
     return jsonify(g.cur.fetchall())
+
 
 @app.route('/api/content_board/metrics/quality_histogram', methods=['GET'])
 def content_quality_bar():
