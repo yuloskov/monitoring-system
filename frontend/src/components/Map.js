@@ -194,7 +194,7 @@ function PointsMap({start, end}) {
       <Map
         style={{position: 'absolute', width: '100%', height: '100%'}}
         defaultState={{
-          center: [50, 50],
+          center: [55, 75],
           zoom: 4,
         }}
         options={{
