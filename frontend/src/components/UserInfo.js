@@ -9,6 +9,8 @@ function UserInfo({start, end}) {
   const {userId} = useParams();
   const [systemInfo, setSystemInfo] = useState([]);
   const [city, setCity] = useState();
+  const [kpi, setKpi] = useState();
+
   useEffect(() => {
     async function getUserData() {
       const res = await fetch(`http://${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
@@ -23,8 +25,19 @@ function UserInfo({start, end}) {
 
     getUserData();
 
-  }, [userId, start, end]);
+  }, [userId, start, end, city]);
 
+  useEffect(() => {
+    async function getUserKPI() {
+      const res = await fetch(`http://${host}/api/user_board/metrics/kpi?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      const kpi = await res.json();
+      console.log(kpi)
+      setKpi(kpi)
+    }
+
+    getUserKPI();
+
+  }, [userId, start, end]);
 
   if (!systemInfo) {
     return (
@@ -73,6 +86,24 @@ function UserInfo({start, end}) {
             {Object.values(row).map(rowValue => <td>{rowValue}</td>)}
           </tr>
         ))}
+        </tbody>
+      </Table>
+
+      <Card.Header style={{color: '#fff'}}>General metrics</Card.Header>
+      <Table hover bordered className="mb-0" style={{backgroundColor: primary, color: '#fff'}}>
+        <thead>
+        <tr>
+          <th>Metric Name</th>
+          <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+          <td><b>QEBAB</b></td>
+          <td><b>{kpi ? kpi[3].toFixed(2): 'Loading...'}</b></td>
+        </tr>
+        
         </tbody>
       </Table>
     </>

@@ -227,21 +227,20 @@ def kpi():
     g.cur.execute(
         f"""
         select a.*, b.*, least(1, cbrt(4 * a.metric1 * b.metric2 * b.metric3)) as metric
-        from (select coalesce(avg(action_result) / max(action_result), 1) as metric1
+        from (select coalesce(avg(action_result) / max(action_result), 1)::double precision as metric1
             from qualities
-            where profile_id = %(user_id)
-                and server_time >= %(start)
-                and server_time < %(end)) as a,
-            (select 1.0 / log(2 + count(*))                                              as metric2,
-                    coalesce(avg(action_attributes_str) / max(action_attributes_str), 1) as metric3
+            where profile_id = %(user_id)s
+                and server_time >= %(start)s
+                and server_time < %(end)s) as a,
+            (select 1.0 / log(2 + count(*)) as metric2,
+                    coalesce(avg(action_attributes_str) / max(action_attributes_str), 1)::double precision as metric3
             from buffering_stop_new
-            where profile_id = %(user_id)
-                and server_time >= %(start)
-                and server_time < %(end)) as b;
+            where profile_id = %(user_id)s
+                and server_time >= %(start)s
+                and server_time < %(end)s) as b;
         """,
         {'user_id': user_id, 'start': start, 'end': end}
     )
-
     return jsonify(g.cur.fetchone())
 
 
