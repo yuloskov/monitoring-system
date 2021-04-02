@@ -66,7 +66,7 @@ function BufferingPlot({ start, end }) {
 
     getBuffChartDataData();
 
-  }, [userId, start, end]);
+  }, [userId, start, end, contentId]);
 
   useEffect(() => {
     if (!data) return;

@@ -53,7 +53,7 @@ function BarChart({ start, end }) {
     }
 
     getBarData();
-  }, [userId, start, end]);
+  }, [userId, start, end, contentId]);
 
   useEffect(() => {
     if (!barData) return;

@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import BarChart from './BarChart';
-import QualityChart from './QualityChart';
 import BufferingPlot from './BufferingPlot';
 import {primary} from '../constants';
 
