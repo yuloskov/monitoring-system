@@ -2,6 +2,7 @@ import { OPTION_BUFF, OPTION_QUALITY, YmapsModules, host } from '../constants';
 import React, {useEffect, useState} from 'react';
 import {withYMaps, YMaps, Map} from 'react-yandex-maps';
 import Spinner from 'react-bootstrap/Spinner';
+import { useParams } from 'react-router';
 
 const cache = {};
 
@@ -33,7 +34,8 @@ function circleSize(data, properties, arg) {
   }
 };
 
-function PointsMap({start, end, option}) {
+function PointsMap({start, end}) {
+  const {option = OPTION_QUALITY} = useParams()
   const [map, setMap] = useState(null)
   const [points, setPoints] = useState(null);
   const [updating, setUpdating] = useState(true);

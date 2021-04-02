@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'react-widgets/dist/css/react-widgets.css';
 import {bglightcolor, OPTION_BUFF, OPTION_QUALITY} from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {DateTimePicker} from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from './patchedMomentLocalizer';
@@ -18,20 +18,26 @@ import Form from 'react-bootstrap/Form';
 Moment.locale('en');
 momentLocalizer();
 
-function ControlPanel({start, end, setEnd, option, setOption}) {
+function ControlPanel({start, end, setEnd}) {
+  const {option = OPTION_QUALITY, userId} = useParams()
   const history = useHistory()
-
+  const [formUserId, setFormUserId] = useState(userId)
+ 
   const radios = [
     {name: 'Mean Buff Time', value: OPTION_BUFF},
     {name: 'Mean Quality', value: OPTION_QUALITY},
   ];
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target)
     const userId = formData.get('user_id');
 
     history.push(`/user_board/${userId}`);
+  }
+
+  function selectOption(option) {
+    history.push(`/map/${option}`)
   }
 
   return (
@@ -52,7 +58,7 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
           <hr style={{background: '#e00a1e'}}/>
 
           <Row style={{padding: '10px'}}>
-            <Route path="/user_board">
+            <Route path="/user_board/:userId?">
               <div className="mb-1">
                 <Form onSubmit={handleSubmit}>
                   <InputGroup className="mb-3">
@@ -61,6 +67,8 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
                       name="user_id"
                       placeholder="User id"
                       style={{backgroundColor: bglightcolor, borderColor: bglightcolor, color: '#fff'}}
+                      value={formUserId}
+                      onChange={(e) => setFormUserId(e.currentTarget.value)}
                     />
                     <InputGroup.Append>
                       <Button variant="secondary" type="submit">Search</Button>
@@ -96,7 +104,7 @@ function ControlPanel({start, end, setEnd, option, setOption}) {
                     name="radio"
                     value={radio.value}
                     checked={option === radio.value}
-                    onChange={(e) => setOption(e.currentTarget.value)}
+                    onChange={(e) => selectOption(e.currentTarget.value)}
                   >
                     {radio.name}
                   </ToggleButton>

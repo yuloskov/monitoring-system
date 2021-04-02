@@ -14,11 +14,10 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
-import {bglightcolor, OPTION_QUALITY} from './constants';
+import {bglightcolor} from './constants';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
-  const [option, setOption] = useState(OPTION_QUALITY);
   const start = new Date(end - 3600000);
 
   return (
@@ -34,12 +33,14 @@ function App() {
           <div>
             <Row className="mr-0">
               <Col xs={2} className="pr-0">
-                <ControlPanel start={start} end={end} setEnd={setEnd} option={option} setOption={setOption}/>
+                <Route path={["/map/:option?", "/user_board/:userId?"]}>
+                  <ControlPanel start={start} end={end} setEnd={setEnd}/>
+                </Route>
               </Col>
 
               <Col className="pl-0">
-                <Route path="/map">
-                  <PointsMap start={start} end={end} option={option}/>
+                <Route path="/map/:option?">
+                  <PointsMap start={start} end={end}/>
                 </Route>
                 <Route path="/user_board/:userId">
                   <UserBoard start={start} end={end}/>
