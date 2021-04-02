@@ -224,7 +224,7 @@ def get_actions():
 
 
 @app.route('/api/user_board/metrics/quality_histogram', methods=['GET'])
-def quality_bar():
+def user_quality_bar():
     start, end = request.args.get('start'), request.args.get('end')
     user_id = request.args.get('user_id')
 
@@ -237,6 +237,24 @@ def quality_bar():
         group by profile_id, quality;
         """,
         (user_id, start, end)
+    )
+
+    return jsonify(g.cur.fetchall())
+
+@app.route('/api/content_board/metrics/quality_histogram', methods=['GET'])
+def content_quality_bar():
+    start, end = request.args.get('start'), request.args.get('end')
+    content_id = request.args.get('content_id')
+
+    g.cur.execute(
+        f"""
+        select action_result as quality, count(*) as count
+        from qualities_new
+        where content_id = %s
+        and server_time >= %s and server_time < %s
+        group by content_id, quality;
+        """,
+        (content_id, start, end)
     )
 
     return jsonify(g.cur.fetchall())

@@ -34,12 +34,18 @@ const layout = {
 
 function BarChart({ start, end }) {
   const { userId } = useParams();
+  const { contentId } = useParams();
   const [barData, setBarData] = useState(null);
 
   useEffect(() => {
     async function getBarData() {
       console.log(userId, start, end);
-      const res = await fetch(`http://${host}/api/user_board/metrics/quality_histogram?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      let res;
+      if(window.location.pathname.includes('/user_board')){
+        res = await fetch(`http://${host}/api/user_board/metrics/quality_histogram?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
+      } else {
+        res = await fetch(`http://${host}/api/content_board/metrics/quality_histogram?start=${start.toISOString()}&end=${end.toISOString()}&content_id=${contentId}`);
+      }
 
       const barData = await res.json();
       console.log('barData', barData);

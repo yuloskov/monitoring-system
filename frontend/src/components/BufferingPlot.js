@@ -35,7 +35,7 @@ const layout = {
     showgrid: true,
     gridcolor: gridcolor,
     tickmode: 'array',
-    showticklabels: true,
+    showticklabels: true,                                           
   }
 };
 
