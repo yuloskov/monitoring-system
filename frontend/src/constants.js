@@ -1,7 +1,16 @@
 export const 
     OPTION_BUFF = 'buff',
     OPTION_QUALITY = 'quality',
-    YmapsModules = ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl', 'layout.PieChart'],
+    QUALITY_PERFECT = '#00FF00',
+    QUALITY_MEDIUM = '#FFFF00',
+    QUALITY_BAD = '#FF0000',
+    BUFF_GOOD = '#00FF00',
+    BUFF_BAD = '#FF0000',
+    QUALITY_COLOR = {
+        1080: QUALITY_PERFECT,
+        720: QUALITY_MEDIUM,
+    },
+    YmapsModules = ['templateLayoutFactory', 'template.filtersStorage', 'Placemark', 'Clusterer', 'control.ZoomControl', 'layout.PieChart', 'util.augment', 'collection.Item'],
     host = 'localhost:5000',
     tickformatstops = [{
           'dtickrange': [null, 1000],

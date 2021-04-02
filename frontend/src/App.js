@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -14,21 +14,20 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
-import {bglightcolor, graphcolor} from './constants';
+import { bglightcolor } from './constants';
 import ScrollUpButton from "react-scroll-up-button";
-import { redraw } from 'plotly.js';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
   const start = new Date(end - 3600000);
 
   return (
-    <div className="App" style={{backgroundColor: bglightcolor}}>
+    <div className="App" style={{ backgroundColor: bglightcolor }}>
       <Router>
         <Container fluid className="pr-0 pl-0">
           <Row className="mr-0">
             <Col className="pr-0">
-              <MyNavbar/>
+              <MyNavbar />
             </Col>
           </Row>
 
@@ -36,16 +35,16 @@ function App() {
             <Row className="mr-0">
               <Col xs={2} className="pr-0">
                 <Route path={["/user_board/:userId?", "/map/:option?", "/"]}>
-                  <ControlPanel start={start} end={end} setEnd={setEnd}/>
+                  <ControlPanel start={start} end={end} setEnd={setEnd} />
                 </Route>
               </Col>
 
               <Col className="pl-0">
                 <Route path="/map/:option?">
-                  <PointsMap start={start} end={end}/>
+                  <PointsMap start={start} end={end} />
                 </Route>
                 <Route path="/user_board/:userId">
-                  <UserBoard start={start} end={end}/>
+                  <UserBoard start={start} end={end} />
                 </Route>
               </Col>
             </Row>
@@ -53,9 +52,9 @@ function App() {
         </Container>
       </Router>
       <ScrollUpButton
-          ContainerClassName="AnyClassForContainer"
-          TransitionClassName='AnyClassForTransition'
-          EasingType="easeInQuad"/>
+        ContainerClassName="AnyClassForContainer"
+        TransitionClassName='AnyClassForTransition'
+        EasingType="easeInQuad" />
     </div>
   );
 }
