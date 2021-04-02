@@ -4,6 +4,8 @@ import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import {host, primary} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 function UserInfo({start, end}) {
   const {userId} = useParams();
@@ -16,8 +18,8 @@ function UserInfo({start, end}) {
       const res = await fetch(`http://${host}/api/user_board/metrics/info?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const userData = await res.json();
       const location_response = await fetch(`http://ip-api.com/json/${userData[0].request_ip}`);
-      setCity((await location_response.json()).city)
-      console.log(city)
+      setCity((await location_response.json()).city);
+      console.log(city);
       setSystemInfo(userData.map(({user_os, user_os_version, user_browser, user_browser_version, device_type, request_ip}) => {
         return [[user_os, user_os_version].join(' '), [user_browser, user_browser_version].join(' '), device_type, request_ip];
       }));
@@ -31,13 +33,19 @@ function UserInfo({start, end}) {
     async function getUserKPI() {
       const res = await fetch(`http://${host}/api/user_board/metrics/kpi?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}`);
       const kpi = await res.json();
-      console.log(kpi)
-      setKpi(kpi)
+      console.log(kpi);
+      setKpi(kpi);
     }
 
     getUserKPI();
 
   }, [userId, start, end]);
+
+  const renderTooltip = (props) => (
+    <Tooltip id="bbq-tooltip" {...props}>
+      Metrics that is accounting buffering time, buffering frequency and quality.
+    </Tooltip>
+  );
 
   if (!systemInfo) {
     return (
@@ -99,11 +107,17 @@ function UserInfo({start, end}) {
         </thead>
         <tbody>
 
-        <tr>
-          <td><b>QEBAB</b></td>
-          <td><b>{kpi ? kpi[3].toFixed(2): 'Loading...'}</b></td>
-        </tr>
-        
+        <OverlayTrigger
+          placement="top"
+          delay={{show: 250, hide: 400}}
+          overlay={renderTooltip}
+        >
+          <tr>
+            <td><b>BBQ</b></td>
+            <td><b>{kpi ? kpi[3].toFixed(2) : 'Loading...'}</b></td>
+          </tr>
+        </OverlayTrigger>
+
         </tbody>
       </Table>
     </>

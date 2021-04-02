@@ -105,6 +105,7 @@ def metrics_buff():
     )
     return jsonify(g.cur.fetchall())
 
+
 @app.route('/api/map/metrics/quality', methods=['GET'])
 def metrics_quality():
     start, end = request.args.get('start'), request.args.get('end')
@@ -166,6 +167,7 @@ def user_buff():
     result = g.cur.fetchall()
     return jsonify([int(s[0]) for s in result])
 
+
 @app.route('/api/content_board/metrics/buff', methods=['GET'])
 def content_buff():
     start, end = request.args.get('start'), request.args.get('end')
@@ -181,7 +183,7 @@ def content_buff():
     )
     result = g.cur.fetchall()
     logger.info(result)
-    return jsonify([ int(s[0])  for s in  result])
+    return jsonify([int(s[0]) for s in result])
 
 
 @app.route('/api/user_board/metrics/content_table', methods=['GET'])
