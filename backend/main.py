@@ -60,7 +60,9 @@ def before_request():
 
 @app.teardown_request
 def teardown_request(exception):
-    g.cur.close()
+    cur = g.pop('cur', None)
+    if cur is not None:
+        cur.close()
 
 
 @app.route('/api/user_board/metrics/quality_chart', methods=['GET'])
