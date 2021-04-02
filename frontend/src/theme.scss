@@ -15,5 +15,13 @@ $font-family-base: 'Montserrat';
   font-weight: 900;
 }
 
+.AnyClassForContainer  {
+    background-color: transparent !important;
+  }
+
+.AnyClassForTransition {
+  left: 20px;
+}
+
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap';

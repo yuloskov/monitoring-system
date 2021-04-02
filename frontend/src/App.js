@@ -14,7 +14,9 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
-import {bglightcolor} from './constants';
+import {bglightcolor, graphcolor} from './constants';
+import ScrollUpButton from "react-scroll-up-button";
+import { redraw } from 'plotly.js';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
@@ -50,6 +52,10 @@ function App() {
           </div>
         </Container>
       </Router>
+      <ScrollUpButton
+          ContainerClassName="AnyClassForContainer"
+          TransitionClassName='AnyClassForTransition'
+          EasingType="easeInQuad"/>
     </div>
   );
 }
