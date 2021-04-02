@@ -23,8 +23,6 @@ function UserContentTable({start, end}) {
 
   async function loadActions(data) {
     const content_id = data[0];
-
-    console.log(content_id);
     const res = await fetch(`http://${host}/api/user_board/metrics/actions?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}&content_id=${content_id}`);
     const actionsData = await res.json();
     setActionsData(actionsData);
@@ -43,7 +41,7 @@ function UserContentTable({start, end}) {
         <tbody>
 
         {contentData.map((row, index) => (
-          <ContentRow data={row} index={index} loadActions={loadActions} selected={selected} setSelected={setSelected}/>
+          <ContentRow data={row} setActionsData={setActionsData} loadActions={loadActions} index={index} selected={selected} setSelected={setSelected}/>
         ))}
         </tbody>
       </Table>
@@ -69,12 +67,17 @@ function UserContentTable({start, end}) {
   );
 }
 
-function ContentRow({index, data, loadActions, selected, setSelected}) {
-  let style = selected === index ? 'selected' : '';
+function ContentRow({index, data, loadActions, setActionsData, selected, setSelected}) {
+  const style = selected === index ? 'selected' : '';
 
   function handleClick() {
-    loadActions(data);
-    setSelected(index);
+    if (selected === index) {
+      setSelected(-1);
+      setActionsData([]);
+    } else {
+      loadActions(data);
+      setSelected(index);
+    }
   }
 
   return (

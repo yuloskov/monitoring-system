@@ -1,4 +1,5 @@
 import moment from 'moment';
+// eslint-disable-next-line no-unused-vars
 import _ from 'moment-timezone'
 import configure from 'react-widgets/lib/configure';
 

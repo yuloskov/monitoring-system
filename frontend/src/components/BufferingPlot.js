@@ -2,45 +2,46 @@ import React, {useEffect, useState} from 'react';
 import Plotly from 'plotly.js';
 import {useParams} from 'react-router';
 import Spinner from 'react-bootstrap/Spinner';
-import { host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
+import { host, graphcolor, bgcolor, lightgray, gridcolor} from '../constants';
+
+const layout = {
+  height: 500,
+  bargap:0.1,
+  paper_bgcolor: bgcolor,
+  plot_bgcolor: bgcolor,
+  xaxis: {
+    title: 'Buffering duration (msec)',
+    showline: true,
+    showgrid: false,
+    showticklabels: true,
+    titlefont:{
+      color: lightgray
+    },
+    tickcolor: lightgray,
+    tickfont:{
+      color: '#fff'
+    },
+    linecolor: lightgray,
+    linewidth: 2,
+  },
+  yaxis: {
+    title: 'count',
+    titlefont:{
+      color: lightgray
+    },
+    tickfont:{
+      color: '#fff'
+    },
+    showgrid: true,
+    gridcolor: gridcolor,
+    tickmode: 'array',
+    showticklabels: true,
+  }
+};
 
 function BufferingPlot({start, end}) {
   const {userId} = useParams();
   const [data, setData] = useState([]);
-  const layout = {
-    height: 500,
-    bargap:0.1,
-    paper_bgcolor: bgcolor,
-    plot_bgcolor: bgcolor,
-    xaxis: {
-      title: 'Buffering duration (msec)',
-      showline: true,
-      showgrid: false,
-      showticklabels: true,
-      titlefont:{
-        color: lightgray
-      },
-      tickcolor: lightgray,
-      tickfont:{
-        color: '#fff'
-      },
-      linecolor: lightgray,
-      linewidth: 2,
-    },
-    yaxis: {
-      title: 'count',
-      titlefont:{
-        color: lightgray
-      },
-      tickfont:{
-        color: '#fff'
-      },
-      showgrid: true,
-      gridcolor: gridcolor,
-      tickmode: 'array',
-      showticklabels: true,
-    }
-  };
 
   useEffect(() => {
     async function getBuffChartDataData() {

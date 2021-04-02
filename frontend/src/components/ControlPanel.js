@@ -1,6 +1,6 @@
 import React from 'react';
 import 'react-widgets/dist/css/react-widgets.css';
-import {bglightcolor, OPTION_BUFF, OPTION_QUALITY, primary} from '../constants';
+import {bglightcolor, OPTION_BUFF, OPTION_QUALITY} from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';

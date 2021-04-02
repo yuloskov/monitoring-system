@@ -4,49 +4,49 @@ import { useParams } from 'react-router';
 import { host, graphcolor, bgcolor, lightgray, gridcolor, tickformatstops} from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
+const layout = {
+  height: 500,
+  paper_bgcolor: bgcolor,
+  plot_bgcolor: bgcolor,
+  xaxis: {
+    title: 'timestamps',
+    showline: true,
+    showgrid: false,
+    showticklabels: true,
+    titlefont:{
+      color: lightgray
+    },
+    tickcolor: lightgray,
+    tickfont:{
+      color: '#fff'
+    },
+    linecolor: lightgray,
+    linewidth: 2,
+    tickformatstops: tickformatstops,
+  },
+  yaxis: {
+    title: 'video quality',
+    type: 'category',
+    categoryorder: 'array',
+    categoryarray: [240, 360, 480, 720, 1080],
+    tickvals: [240, 360, 480, 720, 1080],
+    ticktext: ['240p', '360p', '480p', '720p', '1080p'],
+    titlefont:{
+      color: lightgray
+    },
+    tickfont:{
+      color: '#fff'
+    },
+    showgrid: true,
+    gridcolor: gridcolor,
+    // tickmode: 'array',
+    showticklabels: true,
+  },
+};
 
 function QualityChart({start, end}) {
   const {userId} = useParams();
   const [data, setData] = useState(null);
-  const layout = {
-    height: 500,
-    paper_bgcolor: bgcolor,
-    plot_bgcolor: bgcolor,
-    xaxis: {
-      title: 'timestamps',
-      showline: true,
-      showgrid: false,
-      showticklabels: true,
-      titlefont:{
-        color: lightgray
-      },
-      tickcolor: lightgray,
-      tickfont:{
-        color: '#fff'
-      },
-      linecolor: lightgray,
-      linewidth: 2,
-      tickformatstops: tickformatstops,
-    },
-    yaxis: {
-      title: 'video quality',
-      type: 'category',
-      categoryorder: 'array',
-      categoryarray: [240, 360, 480, 720, 1080],
-      tickvals: [240, 360, 480, 720, 1080],
-      ticktext: ['240p', '360p', '480p', '720p', '1080p'],
-      titlefont:{
-        color: lightgray
-      },
-      tickfont:{
-        color: '#fff'
-      },
-      showgrid: true,
-      gridcolor: gridcolor,
-      // tickmode: 'array',
-      showticklabels: true,
-    },
-  };
   useEffect(() => {
     async function getQualityChartData() {
       const res = await fetch(`http://${host}/api/user_board/metrics/quality_chart?profile_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);

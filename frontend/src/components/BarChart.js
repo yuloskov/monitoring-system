@@ -4,37 +4,38 @@ import { useParams } from 'react-router';
 import { host, graphcolor, bgcolor, lightgray, gridcolor } from '../constants';
 import Spinner from 'react-bootstrap/Spinner';
 
+const layout = {
+  height: 500,
+  paper_bgcolor: bgcolor,
+  plot_bgcolor: bgcolor,
+  xaxis: {
+    showline: true,
+    showgrid: false,
+    showticklabels: true,
+    tickcolor: lightgray,
+    tickfont: {
+      color: '#fff'
+    },
+    linecolor: lightgray,
+    linewidth: 2,
+  },
+  yaxis: {
+    tickfont: {
+      color: '#fff'
+    },
+    showgrid: true,
+    gridcolor: gridcolor,
+    tickmode: 'array',
+    showline: false,
+    showticklabels: true,
+
+  },
+};
 
 function BarChart({ start, end }) {
   const { userId } = useParams();
   const [barData, setBarData] = useState(null);
-  const layout = {
-    height: 500,
-    paper_bgcolor: bgcolor,
-    plot_bgcolor: bgcolor,
-    xaxis: {
-      showline: true,
-      showgrid: false,
-      showticklabels: true,
-      tickcolor: lightgray,
-      tickfont: {
-        color: '#fff'
-      },
-      linecolor: lightgray,
-      linewidth: 2,
-    },
-    yaxis: {
-      tickfont: {
-        color: '#fff'
-      },
-      showgrid: true,
-      gridcolor: gridcolor,
-      tickmode: 'array',
-      showline: false,
-      showticklabels: true,
 
-    },
-  };
   useEffect(() => {
     async function getBarData() {
       console.log(userId, start, end);
