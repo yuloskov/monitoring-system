@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Link, useParams } from 'react-router-dom';
-import { DateTimePicker } from 'react-widgets';
+import { DateTimePicker, Combobox } from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from './patchedMomentLocalizer';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -18,11 +18,21 @@ import Form from 'react-bootstrap/Form';
 Moment.locale('en');
 momentLocalizer();
 
-function ControlPanel({ start, end, setEnd }) {
+function ControlPanel({ setStart, end, setEnd }) {
   const { option = OPTION_QUALITY, userId, contentId } = useParams()
   const history = useHistory()
   const [formUserId, setFormUserId] = useState(userId)
   const [formContentId, setFormContentId] = useState(contentId)
+  const timeIntervals = [
+    { id: 15 * 60, name: '15 min'},
+    { id: 30 * 60, name: '30 min'},
+    { id: 45 * 60, name: '45 min'},
+    { id: 60 * 60, name: '1 hour'},
+    { id: 90 * 60, name: '1.5 hour'},
+    { id: 120 * 60, name: '2 hours'},
+    { id: 180 * 60, name: '3 hours'},
+  ]
+  const [interval, setInterval] = useState(timeIntervals[3])
 
   const radios = [
     { name: 'Mean Buff Time', value: OPTION_BUFF },
@@ -46,6 +56,13 @@ function ControlPanel({ start, end, setEnd }) {
 
   function selectOption(option) {
     history.push(`/map/${option}`)
+  }
+
+  function changeInterval(x) {
+    if (typeof x === 'object') {
+      setInterval(x)
+      setStart(new Date(end - x.id * 1000))
+    }
   }
 
   return (
@@ -109,13 +126,12 @@ function ControlPanel({ start, end, setEnd }) {
               </div>
             </Route>
             <div className="mb-1">
-              <div style={{ color: '#ffffff' }}>From</div>
-              <DateTimePicker disabled value={start} />
-            </div>
-
-            <div className="mb-1">
-              <div style={{ color: '#ffffff' }}>To</div>
+              <div style={{ color: '#ffffff' }}>Range end</div>
               <DateTimePicker value={end} onChange={date => setEnd(date)} />
+            </div>
+            <div className="mb-1">
+              <div style={{ color: '#ffffff' }}>Range length</div>
+              <Combobox textField='name' dataKey='id' data={timeIntervals} width='100%' onChange={changeInterval} value={interval.name}/>
             </div>
           </Row>
 

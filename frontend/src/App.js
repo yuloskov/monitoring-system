@@ -20,7 +20,7 @@ import ContentBoard from './components/ContentBoard';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
-  const start = new Date(end - 3600000);
+  const [start, setStart] = useState(new Date('2021-03-08T19:00:00'));
 
   return (
     <div className="App" style={{ backgroundColor: bglightcolor }}>
@@ -36,7 +36,7 @@ function App() {
             <Row className="mr-0">
               <Col xs={2} className="pr-0">
                 <Route path={["/user_board/:userId?", "/map/:option?", "/"]}>
-                  <ControlPanel start={start} end={end} setEnd={setEnd} />
+                  <ControlPanel setStart={setStart} end={end} setEnd={setEnd} />
                 </Route>
               </Col>
 
