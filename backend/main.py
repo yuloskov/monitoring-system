@@ -165,7 +165,7 @@ def user_buff():
         (profile_id, start, end)
     )
     result = g.cur.fetchall()
-    return jsonify([ int(s[0])  for s in  result])
+    return jsonify([int(s[0]) for s in result])
 
 
 @app.route('/api/user_board/metrics/content_table', methods=['GET'])
@@ -175,8 +175,10 @@ def content_table():
 
     g.cur.execute(
         f"""
-        select distinct content_id, device_type from users 
-        where profile_id=%s and server_time >= %s and server_time < %s
+        select distinct b.content_title, a.content_id, device_type 
+        from users a, content_titles b 
+        where a.content_id = b.content_id and profile_id=%s 
+        and server_time >= %s and server_time < %s
         """,
         (profile_id, start, end)
     )

@@ -22,7 +22,7 @@ function UserContentTable({start, end}) {
   }, [start, end, userId]);
 
   async function loadActions(data) {
-    const content_id = data[0];
+    const content_id = data[1];
     const res = await fetch(`http://${host}/api/user_board/metrics/actions?start=${start.toISOString()}&end=${end.toISOString()}&user_id=${userId}&content_id=${content_id}`);
     const actionsData = await res.json();
     setActionsData(actionsData);
@@ -34,6 +34,7 @@ function UserContentTable({start, end}) {
       <Table hover bordered className="mb-0" style={{backgroundColor: primary, color: '#fff'}}>
         <thead>
         <tr>
+          <th>Content Title</th>
           <th>Content ID</th>
           <th>Device</th>
         </tr>
