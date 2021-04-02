@@ -33,7 +33,7 @@ function App() {
           <div>
             <Row className="mr-0">
               <Col xs={2} className="pr-0">
-                <Route path={["/", "/map/:option?", "/user_board/:userId?"]}>
+                <Route path={["/user_board/:userId?", "/map/:option?", "/"]}>
                   <ControlPanel start={start} end={end} setEnd={setEnd}/>
                 </Route>
               </Col>
