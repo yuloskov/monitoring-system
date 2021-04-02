@@ -19,9 +19,7 @@ function ContentBoard({start, end}) {
               <BufferingPlot start={start} end={end}/>
             </Card>
           </Col>
-        </Row>
 
-        <Row className="mt-3">
           <Col className="mb-3">
             <Card style={{backgroundColor: primary}}>
               <Card.Header style={{color: '#fff'}}>Quality distribution</Card.Header>

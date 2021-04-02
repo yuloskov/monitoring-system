@@ -177,7 +177,8 @@ def content_buff():
         """
         select action_attributes_str from users 
         where content_id=%s and server_time>=%s and 
-        server_time<=%s and action_id='buffer_stop' order by server_time
+        server_time<=%s and action_id='buffer_stop' and 
+        action_attributes_str::integer < 300000 order by server_time
         """,
         (content_id, start, end)
     )
