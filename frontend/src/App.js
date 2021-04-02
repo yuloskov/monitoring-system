@@ -16,6 +16,7 @@ import Col from 'react-bootstrap/Col';
 import UserBoard from './components/UserBoard';
 import { bglightcolor } from './constants';
 import ScrollUpButton from "react-scroll-up-button";
+import ContentBoard from './components/ContentBoard';
 
 function App() {
   const [end, setEnd] = useState(new Date('2021-03-08T20:00:00'));
@@ -45,6 +46,9 @@ function App() {
                 </Route>
                 <Route path="/user_board/:userId">
                   <UserBoard start={start} end={end} />
+                </Route>
+                <Route path="/content_board/:contentId">
+                  <ContentBoard start={start} end={end}/>
                 </Route>
               </Col>
             </Row>

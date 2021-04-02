@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import 'react-widgets/dist/css/react-widgets.css';
-import {bglightcolor, OPTION_BUFF, OPTION_QUALITY} from '../constants';
+import { bglightcolor, OPTION_BUFF, OPTION_QUALITY } from '../constants';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Link, useParams } from 'react-router-dom';
-import {DateTimePicker} from 'react-widgets';
+import { DateTimePicker } from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from './patchedMomentLocalizer';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
-import {Route, useHistory} from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import Form from 'react-bootstrap/Form';
@@ -18,22 +18,30 @@ import Form from 'react-bootstrap/Form';
 Moment.locale('en');
 momentLocalizer();
 
-function ControlPanel({start, end, setEnd}) {
-  const {option = OPTION_QUALITY, userId} = useParams()
+function ControlPanel({ start, end, setEnd }) {
+  const { option = OPTION_QUALITY, userId, contentId } = useParams()
   const history = useHistory()
   const [formUserId, setFormUserId] = useState(userId)
- 
+  const [formContentId, setFormContentId] = useState(contentId)
+
   const radios = [
-    {name: 'Mean Buff Time', value: OPTION_BUFF},
-    {name: 'Mean Quality', value: OPTION_QUALITY},
+    { name: 'Mean Buff Time', value: OPTION_BUFF },
+    { name: 'Mean Quality', value: OPTION_QUALITY },
   ];
 
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target)
-    const userId = formData.get('user_id');
+    let url = ''
+    if (window.location.pathname.includes('/user_board')) {
+      const userId = formData.get('user_id');
+      url = `/user_board/${userId}`
+    } else { 
+      const contentId = formData.get('content_id');
+      url = `/content_board/${contentId}`
+    }
+    history.push(url)
 
-    history.push(`/user_board/${userId}`);
   }
 
   function selectOption(option) {
@@ -42,22 +50,26 @@ function ControlPanel({start, end, setEnd}) {
 
   return (
     <>
-      <div className="min-vh-100 h-100" style={{backgroundColor: '#1d1f23'}}>
+      <div className="min-vh-100 h-100" style={{ backgroundColor: '#1d1f23' }}>
         <Container bg='primary'>
-          <Row style={{padding: '10px'}}>
-            <Link to="/map" style={{width: '100%'}}>
+          <Row style={{ padding: '10px' }}>
+            <Link to="/map" style={{ width: '100%' }}>
               <Button block variant='secondary'>Map</Button>
             </Link>
           </Row>
-          <Row style={{padding: '10px'}}>
-            <Link to="/user_board" style={{width: '100%'}}>
+          <Row style={{ padding: '10px' }}>
+            <Link to="/user_board" style={{ width: '100%' }}>
               <Button block variant='secondary'>User Board</Button>
             </Link>
           </Row>
+          <Row style={{ padding: '10px' }}>
+            <Link to="/content_board" style={{ width: '100%' }}>
+              <Button block variant='secondary'>Content Board</Button>
+            </Link>
+          </Row>
+          <hr style={{ background: '#e00a1e' }} />
 
-          <hr style={{background: '#e00a1e'}}/>
-
-          <Row style={{padding: '10px'}}>
+          <Row style={{ padding: '10px' }}>
             <Route path="/user_board/:userId?">
               <div className="mb-1">
                 <Form onSubmit={handleSubmit}>
@@ -66,7 +78,7 @@ function ControlPanel({start, end, setEnd}) {
                       type="text"
                       name="user_id"
                       placeholder="User id"
-                      style={{backgroundColor: bglightcolor, borderColor: bglightcolor, color: '#fff'}}
+                      style={{ backgroundColor: bglightcolor, borderColor: bglightcolor, color: '#fff' }}
                       value={formUserId}
                       onChange={(e) => setFormUserId(e.currentTarget.value)}
                     />
@@ -77,24 +89,42 @@ function ControlPanel({start, end, setEnd}) {
                 </Form>
               </div>
             </Route>
-
+            <Route path="/content_board/:userId?">
+              <div className="mb-1">
+                <Form onSubmit={handleSubmit}>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      type="text"
+                      name="content_id"
+                      placeholder="Content id"
+                      style={{ backgroundColor: bglightcolor, borderColor: bglightcolor, color: '#fff' }}
+                      value={formContentId}
+                      onChange={(e) => setFormContentId(e.currentTarget.value)}
+                    />
+                    <InputGroup.Append>
+                      <Button variant="secondary" type="submit">Search</Button>
+                    </InputGroup.Append>
+                  </InputGroup>
+                </Form>
+              </div>
+            </Route>
             <div className="mb-1">
-              <div style={{color: '#ffffff'}}>From</div>
-              <DateTimePicker disabled value={start}/>
+              <div style={{ color: '#ffffff' }}>From</div>
+              <DateTimePicker disabled value={start} />
             </div>
 
             <div className="mb-1">
-              <div style={{color: '#ffffff'}}>To</div>
-              <DateTimePicker value={end} onChange={date => setEnd(date)}/>
+              <div style={{ color: '#ffffff' }}>To</div>
+              <DateTimePicker value={end} onChange={date => setEnd(date)} />
             </div>
           </Row>
 
           <Route path="/map">
-            <Row style={{paddingLeft: '10px'}}>
-              <div style={{color: '#ffffff'}} className="w-100">Options</div>
+            <Row style={{ paddingLeft: '10px' }}>
+              <div style={{ color: '#ffffff' }} className="w-100">Options</div>
             </Row>
 
-            <Row style={{paddingLeft: '10px', paddingRight: '10px'}}>
+            <Row style={{ paddingLeft: '10px', paddingRight: '10px' }}>
               <ButtonGroup toggle vertical className="w-100">
                 {radios.map((radio, idx) => (
                   <ToggleButton

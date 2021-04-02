@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Plotly from 'plotly.js';
-import {useParams} from 'react-router';
+import { useParams } from 'react-router';
 import Spinner from 'react-bootstrap/Spinner';
-import { host, graphcolor, bgcolor, lightgray, gridcolor} from '../constants';
+import { host, graphcolor, bgcolor, lightgray, gridcolor } from '../constants';
 
 const layout = {
   height: 500,
-  bargap:0.1,
+  bargap: 0.1,
   paper_bgcolor: bgcolor,
   plot_bgcolor: bgcolor,
   xaxis: {
@@ -14,11 +14,11 @@ const layout = {
     showline: true,
     showgrid: false,
     showticklabels: true,
-    titlefont:{
+    titlefont: {
       color: lightgray
     },
     tickcolor: lightgray,
-    tickfont:{
+    tickfont: {
       color: '#fff'
     },
     linecolor: lightgray,
@@ -26,10 +26,10 @@ const layout = {
   },
   yaxis: {
     title: 'count',
-    titlefont:{
+    titlefont: {
       color: lightgray
     },
-    tickfont:{
+    tickfont: {
       color: '#fff'
     },
     showgrid: true,
@@ -39,18 +39,25 @@ const layout = {
   }
 };
 
-function BufferingPlot({start, end}) {
-  const {userId} = useParams();
+function BufferingPlot({ start, end }) {
+  const { userId } = useParams();
+  const { contentId } = useParams();
   const [data, setData] = useState([]);
 
   useEffect(() => {
     async function getBuffChartDataData() {
-      const res = await fetch(`http://${host}/api/user_board/metrics/buff?user_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+      let res;
+      if(window.location.pathname.includes('/user_board')){
+        res = await fetch(`http://${host}/api/user_board/metrics/buff?user_id=${userId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+      } else {
+        res = await fetch(`http://${host}/api/content_board/metrics/buff?content_id=${contentId}&start=${start.toISOString()}&end=${end.toISOString()}`);
+      }
       const json = await res.json();
+      console.log(json)
       const data = [{
         x: json,
         type: 'histogram',
-        marker:{
+        marker: {
           color: graphcolor
         }
       }];
@@ -63,7 +70,7 @@ function BufferingPlot({start, end}) {
 
   useEffect(() => {
     if (!data) return;
-    
+
     Plotly.newPlot('buff', data, layout);
   });
 
@@ -79,7 +86,7 @@ function BufferingPlot({start, end}) {
 
   return (
     <>
-      <div id="buff"/>
+      <div id="buff" />
     </>
   );
 }
