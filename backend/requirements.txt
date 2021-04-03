@@ -2,4 +2,4 @@ Flask
 psycopg2-binary~=2.8.6
 flask_cors
 requests
-uwsgi
+gunicorn

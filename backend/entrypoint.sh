@@ -2,15 +2,11 @@
 
 set -ex
 
-if [ "$1" = 'uwsgi' ]; then
+if [ "$1" = 'gunicorn' ]; then
   exec $@ \
-      --http :5000
-      --master \
-      --processes=2 \
-      --threads=2 \
-      --harakiri=60 \
-      --max-requests=100 \
-      --module=wsgi
+    -w 4 \
+    -b 0.0.0.0:5000 \
+    wsgi:app
 fi
 
 exec "$@"

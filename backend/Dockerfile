@@ -10,4 +10,4 @@ COPY . .
 
 ENTRYPOINT [ "./entrypoint.sh" ]
 
-CMD [ "uwsgi" ]
+CMD [ "gunicorn" ]
