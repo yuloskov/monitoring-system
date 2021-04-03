@@ -258,6 +258,24 @@ def user_quality_bar():
 
     return jsonify(g.cur.fetchall())
 
+@app.route('/api/content_board/metrics/device_types', methods=['GET'])
+def device_types():
+    start, end = request.args.get('start'), request.args.get('end')
+    content_id = request.args.get('content_id')
+
+    g.cur.execute(
+        f"""
+        select device_type, count(*) as count
+        from users
+        where content_id = %s
+        and server_time >= %s and server_time < %s
+        group by content_id, device_type;
+        """,
+        (content_id, start, end)
+    )
+
+    return jsonify(g.cur.fetchall())
+
 
 @app.route('/api/content_board/metrics/quality_histogram', methods=['GET'])
 def content_quality_bar():
@@ -282,11 +300,11 @@ def content_quality_bar():
 def content_views_chart():
     start, end = request.args.get('start'), request.args.get('end')
     content_id = request.args.get('content_id')
-    epsilon = (datetime.fromisoformat(end[:-1]) - datetime.fromisoformat(start[:-1])).seconds // 10
+    epsilon = (datetime.fromisoformat(end[:-1]) - datetime.fromisoformat(start[:-1])).seconds // 15
     logger.info(epsilon)
     g.cur.execute(
         f"""
-        select count(distinct profile_id), to_timestamp(round(extract('epoch' from server_time) / %(epsilon)s) * %(epsilon)s)
+        select count(distinct profile_id), to_timestamp(round(extract('epoch' from server_time) / %(epsilon)s ) * %(epsilon)s)
         from qualities_new
         where server_time >= %(start)s
         and server_time <= %(end)s

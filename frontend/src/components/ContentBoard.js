@@ -8,6 +8,7 @@ import BufferingPlot from './BufferingPlot';
 import {primary} from '../constants';
 import ContentInfo from './ContentInfo';
 import ContentViewsChart from './ContentViewsChart';
+import DeviceTypeChart from './DeviceTypeChart';
 
 function ContentBoard({ start, end }) {
   return (
@@ -40,6 +41,12 @@ function ContentBoard({ start, end }) {
             <Card style={{ backgroundColor: primary }}>
               <Card.Header style={{ color: '#fff' }}>Active viewers</Card.Header>
               <ContentViewsChart start={start} end={end} />
+            </Card>
+          </Col>
+          <Col className="mb-3">
+            <Card style={{ backgroundColor: primary }}>
+              <Card.Header style={{ color: '#fff' }}>Device types</Card.Header>
+              <DeviceTypeChart start={start} end={end} />
             </Card>
           </Col>
         </Row>

@@ -36,7 +36,7 @@ function ControlPanel({ setStart, end, setEnd }) {
 
   const radios = [
     { name: 'Mean Buff Time', value: OPTION_BUFF },
-    { name: 'Mean Quality', value: OPTION_QUALITY },
+    { name: 'Quality', value: OPTION_QUALITY },
   ];
 
   function handleSubmit(event) {
