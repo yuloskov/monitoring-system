@@ -51,11 +51,11 @@ LOGGER_CONFIG = {
 logger = logging.getLogger(__name__)
 logging.config.dictConfig(LOGGER_CONFIG)
 
-app = Flask(__name__)
-CORS(app)
-
 
 def create_app():
+    app = Flask(__name__)
+    CORS(app)
+
     @app.before_request
     def before_request():
         global conn
