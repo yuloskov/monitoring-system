@@ -1,16 +1,5 @@
 version: "3.7"
 services:
-  react:
-    build: frontend
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.smart.rule=Host(`startmetrics.sgmakarov.ru`)"
-      - "traefik.http.routers.smart.entrypoints=websecure"
-      - "traefik.http.routers.smart.tls.certresolver=letsencrypt"
-      - "traefik.http.services.smart.loadbalancer.server.port=3000"
-    networks:
-      - proxy
-  
   web:
     build: backend
     environment:
@@ -27,6 +16,19 @@ services:
       - 'db:34.89.182.168'
     networks:
       - proxy
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx.rule=Host(`startmetrics.sgmakarov.ru`)"
+      - "traefik.http.routers.nginx.entrypoints=websecure"
+      - "traefik.http.routers.nginx.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nginx.loadbalancer.server.port=80"
+    networks:
+      - proxy  
 
 networks:
   proxy:
